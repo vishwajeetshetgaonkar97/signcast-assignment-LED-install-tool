@@ -1,7 +1,7 @@
 import React from "react";
 
 interface TopBarProps {
-  themeMode: "dark" | "light" |"solarized"| "ocean";
+  themeMode: string;
   setThemeMode: (mode: "dark" | "light" |"solarized"| "ocean") => void;
 }
 
