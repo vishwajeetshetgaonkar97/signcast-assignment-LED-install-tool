@@ -37,6 +37,7 @@ const TopBar: React.FC<TopBarProps> = ({ themeMode, setThemeMode }) => {
           ></path>
         </svg>
       </button>
+      
     </div>
   );
 };

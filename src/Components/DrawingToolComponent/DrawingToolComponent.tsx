@@ -1,6 +1,7 @@
 import { useState } from "react";
-import CanvusComponent from "../CanvusComponent/CanvusComponent";
+import CanvasComponent from "../CanvasComponent/CanvasComponent";
 import ConfigurationComponent from "../ConfigurationComponent/ConfigurationComponent";
+import FabricCanvas from "../FabricCanvas/FabricCanvas";
 
 interface TestArrayItem {
   name: string;
@@ -15,12 +16,12 @@ const DrawingToolComponent = () => {
   ]);
 
   return (
-    <>
-      <div className="flex flex-col aspect-video ">
-        <CanvusComponent testArray={testArray} />
-      </div>
+    <div className="flex align-center justify-center w-full gap-4">
+      
+      <FabricCanvas/>
+    
       <ConfigurationComponent />
-    </>
+    </div>
   );
 };
 

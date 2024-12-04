@@ -18,11 +18,11 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className={`${themeMode} bg-bg-color text-text-color min-h-screen px-4 py-2`}>
+    <div className={`${themeMode} bg-bg-color text-text-color min-h-screen px-4 py-2 font-poppins`}>
       <TopBar themeMode={themeMode} setThemeMode={toggleThemeMode} />
       <main className="flex min-h-screen flex-col">
         <DrawingToolComponent />
-        <div className="mt-4 space-x-2">
+        {/* <div className="mt-4 space-x-2">
           {themes.map((theme) => (
             <button
               key={theme}
@@ -32,7 +32,7 @@ const App: React.FC = () => {
               {theme}
             </button>
           ))}
-        </div>
+        </div> */}
       </main>
     </div>
   );

@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react'
 import * as fabric from 'fabric'
-import { useFabricJSEditor, FabricJSEditor, FabricJSEditorHook } from './editor'
 
 export interface Props {
   className?: string
@@ -8,7 +7,7 @@ export interface Props {
 }
 
 /**
- * Fabric canvas as component with 16:9 aspect ratio
+ * Fabric canvas as component with 16:9 aspect ratio based on parent container size
  */
 const FabricJSCanvas = ({ className, onReady }: Props) => {
   const canvasEl = useRef<HTMLCanvasElement>(null)
@@ -16,11 +15,12 @@ const FabricJSCanvas = ({ className, onReady }: Props) => {
 
   useEffect(() => {
     const canvas = new fabric.Canvas(canvasEl.current ?? undefined)
-    
+
     const setCurrentDimensions = () => {
       const parentWidth = canvasElParent.current?.clientWidth || 0
       const aspectRatio = 16 / 9
-      const newHeight = parentWidth / aspectRatio
+      const newHeight = parentWidth / aspectRatio // Calculate height based on width
+
       canvas.setWidth(parentWidth)
       canvas.setHeight(newHeight)
       canvas.renderAll()
@@ -45,11 +45,11 @@ const FabricJSCanvas = ({ className, onReady }: Props) => {
   }, [])
 
   return (
-    <div ref={canvasElParent} className={className}>
+    <div ref={canvasElParent} className={className} style={{ width: '100%', height: '100%' }}>
       <canvas ref={canvasEl} />
     </div>
   )
 }
 
-export { FabricJSCanvas, useFabricJSEditor }
-export type { FabricJSEditor, FabricJSEditorHook }
+export { FabricJSCanvas }
+export type { FabricJSCanvas }

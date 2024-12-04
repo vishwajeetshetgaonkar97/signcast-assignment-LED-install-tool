@@ -13,7 +13,7 @@ interface CanvusComponentProps {
   testArray: TestArrayItem[];
 }
 
-const CanvusComponent: React.FC<CanvusComponentProps> = ({ testArray }) => {
+const CanvasComponent: React.FC<CanvusComponentProps> = ({ testArray }) => {
   const { selectedObjects, editor, onReady } = useFabricJSEditor({
     defaultStrokeColor: "red",
   });
@@ -110,7 +110,7 @@ const CanvusComponent: React.FC<CanvusComponentProps> = ({ testArray }) => {
 
   return (
     <>
-      {editor ? (
+      {/* {false && editor ? (
         <div>
           <button onClick={onDownloadCanvasAsPDF}>Download as PDF</button>
           <button onClick={() => editor?.zoomIn()}>Zoom In</button>
@@ -149,11 +149,11 @@ const CanvusComponent: React.FC<CanvusComponentProps> = ({ testArray }) => {
         </div>
       ) : (
         <>Loading...</>
-      )}
+      )} */}
 
       <FabricJSCanvas className="sample-canvas border-2 aspect-video" onReady={onReady} />
     </>
   );
 };
 
-export default CanvusComponent;
+export default CanvasComponent;
