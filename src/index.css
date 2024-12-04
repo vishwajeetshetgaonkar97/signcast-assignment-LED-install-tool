@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+.light {
+  --background: 255, 255, 255;
+  --text: 0, 0, 0;
+  --border: 212, 212, 212;
+  --card: 255, 255, 255;
+}
+
+.dark {
+  --background: 0, 0, 0;
+  --text: 255, 255, 255;
+  --border: 38, 38, 38;
+  --card: 23, 23, 23;
+}
+
+.solarized {
+  --background: 253, 246, 227;
+  --text: 101, 123, 131;
+  --border: 147, 161, 161;
+  --card: 238, 232, 213;
+}
+
+.ocean {
+  --background: 30, 40, 80;
+  --text: 220, 230, 250;
+  --border: 60, 70, 90;
+  --card: 40, 50, 90;
+}
+
+html {
+  transition: all 200ms;
+}
