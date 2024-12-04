@@ -1,4 +1,4 @@
-import { FabricObjectProps } from 'fabric/*'
+import { FabricObjectProps } from 'fabric';
 
 export type DefaultLine = {
   points: [number, number, number, number]

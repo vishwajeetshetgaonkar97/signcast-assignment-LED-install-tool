@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import CanvusComponent from "../CanvusComponent/CanvusComponent";
 import ConfigurationComponent from "../ConfigurationComponent/ConfigurationComponent";
 
@@ -8,7 +8,7 @@ interface TestArrayItem {
   height: number;
 }
 
-const DrawingToolComponent = (props) => {
+const DrawingToolComponent = () => {
   const [testArray, setTestArray] = useState<TestArrayItem[]>([
     { name: "saadcv", age: 23, height: 12.5 },
     { name: "saawfedcv", age: 253, height: 152.5 },
