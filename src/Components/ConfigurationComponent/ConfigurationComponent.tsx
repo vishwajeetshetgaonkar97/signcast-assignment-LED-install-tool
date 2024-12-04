@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Papa from "papaparse";
 
 interface Database {
@@ -13,22 +13,23 @@ interface Database {
 
 const ConfigurationComponent = () => {
   const [data, setData] = useState<Database[]>([]);
-  const [selectedValues, setSelectedValues] = useState<Record<string, string>>({});
+  const [selectedValues, setSelectedValues] = useState<Partial<Record<keyof Database, string>>>({});
 
   // Load CSV and parse it
   useEffect(() => {
-    Papa.parse("/database/data.csv", {
+    Papa.parse<Database>("/database/data.csv", {
       download: true,
       header: true,
+      skipEmptyLines: true,
       complete: (result) => {
-        const parsedData = result.data.map((row: any) => ({
-          screenMFR: row["Screen MFR"],
-          make: row["Make"],
-          screenSize: parseFloat(row["Screen Size"]),
-          height: parseFloat(row["Height"]),
-          width: parseFloat(row["Width"]),
-          depth: parseFloat(row["Depth"]),
-          weight: parseFloat(row["Weight (LBS)"]),
+        const parsedData: Database[] = result.data.map((row) => ({
+          screenMFR: row["Screen MFR"] || "",
+          make: row["Make"] || "",
+          screenSize: parseFloat(row["Screen Size"] || "0"),
+          height: parseFloat(row["Height"] || "0"),
+          width: parseFloat(row["Width"] || "0"),
+          depth: parseFloat(row["Depth"] || "0"),
+          weight: parseFloat(row["Weight (LBS)"] || "0"),
         }));
         setData(parsedData);
       },
@@ -45,17 +46,15 @@ const ConfigurationComponent = () => {
   };
 
   // Get unique values for a specific field
-  const getFieldOptions = (field: keyof Database) => {
+  const getFieldOptions = (field: keyof Database): string[] => {
     return Array.from(new Set(data.map((row) => String(row[field]))));
   };
 
-  console.log("dataaaaaaaaa",data)
-  
   return (
     <form className="max-w-md mx-auto space-y-4">
       {data.length > 0 ? (
         <>
-          {Object.keys(data[0]).map((field) => (
+          {(Object.keys(data[0]) as (keyof Database)[]).map((field) => (
             <div key={field}>
               <label
                 htmlFor={field}
@@ -66,11 +65,11 @@ const ConfigurationComponent = () => {
               <select
                 id={field}
                 value={selectedValues[field] || ""}
-                onChange={(e) => handleSelectionChange(field as keyof Database, e.target.value)}
+                onChange={(e) => handleSelectionChange(field, e.target.value)}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
                 <option value="">Select {field}</option>
-                {getFieldOptions(field as keyof Database).map((option, index) => (
+                {getFieldOptions(field).map((option, index) => (
                   <option key={index} value={option}>
                     {option}
                   </option>

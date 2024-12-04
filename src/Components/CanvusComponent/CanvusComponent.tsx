@@ -31,7 +31,7 @@ const CanvusComponent: React.FC<CanvusComponentProps> = ({ testArray }) => {
       console.log("Adding rectangles to canvas:", testArray);
 
       // Loop through the testArray to add rectangles and text
-      testArray.forEach((item, index) => {
+      testArray.forEach((item) => {
         // Add a rectangle based on age and height
         const rectangle = new fabric.Rect({
           left: 50 + item.age * 5,
@@ -75,7 +75,7 @@ const CanvusComponent: React.FC<CanvusComponentProps> = ({ testArray }) => {
       const canvasObjects = editor.canvas.getObjects();
 
       // Add each text element as selectable text in the PDF
-      for (let obj of canvasObjects) {
+      for (const obj of canvasObjects) {
         if (obj instanceof fabric.Text) {
           page.drawText(obj.text, {
             x: obj.left!,
