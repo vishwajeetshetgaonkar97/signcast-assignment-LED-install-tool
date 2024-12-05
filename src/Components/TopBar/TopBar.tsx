@@ -2,7 +2,7 @@ import React from "react";
 
 interface TopBarProps {
   themeMode: string;
-  setThemeMode: (mode: "dark" | "light" |"solarized"| "ocean") => void;
+  setThemeMode: (mode: "dark" | "light" | "solarized" | "ocean") => void;
 }
 
 const TopBar: React.FC<TopBarProps> = ({ themeMode, setThemeMode }) => {
@@ -12,21 +12,24 @@ const TopBar: React.FC<TopBarProps> = ({ themeMode, setThemeMode }) => {
 
   return (
     <div className="flex w-full h-min justify-between  items-center dark:text-neutral-100">
-      
       <img className="h-9" src="/logo.png" alt="Logo" />
       <button
         onClick={toggleDMode}
-        className="h-10 w-10 rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+        className="h-9 w-9 rounded-sm p-2 hover:bg-card-color "
       >
         <svg
-          className={`fill-violet-700 ${themeMode === "light" ? "hidden" : "block"}`}
+          className={`fill-violet-700 ${
+            themeMode === "light" ? "hidden" : "block"
+          }`}
           fill="currentColor"
           viewBox="0 0 20 20"
         >
           <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
         </svg>
         <svg
-          className={`fill-yellow-500 ${themeMode === "light" ? "block" : "hidden"}`}
+          className={`fill-yellow-500 ${
+            themeMode === "light" ? "block" : "hidden"
+          }`}
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -37,7 +40,6 @@ const TopBar: React.FC<TopBarProps> = ({ themeMode, setThemeMode }) => {
           ></path>
         </svg>
       </button>
-      
     </div>
   );
 };

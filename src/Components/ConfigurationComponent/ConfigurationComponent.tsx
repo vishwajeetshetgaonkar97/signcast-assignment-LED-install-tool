@@ -13,7 +13,9 @@ interface Database {
 
 const ConfigurationComponent = () => {
   const [data, setData] = useState<Database[]>([]);
-  const [selectedValues, setSelectedValues] = useState<Partial<Record<keyof Database, string>>>({});
+  const [selectedValues, setSelectedValues] = useState<
+    Partial<Record<keyof Database, string>>
+  >({});
 
   // Load CSV and parse it
   useEffect(() => {
@@ -51,11 +53,12 @@ const ConfigurationComponent = () => {
   };
 
   return (
-    <form className="  px-4 py-2 space-y-0 border-2">
-      <h4 className="font-semibold text-sm pb-2">Configurations</h4>
+    <form className=" h-max px-4 py-3 space-y-0 border-2 border-border-color">
+      <h4 className="font-semibold text-sm pb-2 text-opacity-5">
+        Configurations
+      </h4>
       {data.length > 0 ? (
         <>
-        
           {(Object.keys(data[0]) as (keyof Database)[]).map((field) => (
             <div key={field} className="pb-2">
               <label
@@ -68,11 +71,15 @@ const ConfigurationComponent = () => {
                 id={field}
                 value={selectedValues[field] || ""}
                 onChange={(e) => handleSelectionChange(field, e.target.value)}
-                className=" border border-gray-300 text-gray-900 text-sm  focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="border bg-card-color border-border-color text-card-text-color text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 "
               >
-                <option value=""> {field}</option>
+                <option value="">{field}</option>
                 {getFieldOptions(field).map((option, index) => (
-                  <option key={index} value={option}>
+                  <option
+                    key={index}
+                    value={option}
+                    className="text-card-text-color "
+                  >
                     {option}
                   </option>
                 ))}
@@ -83,6 +90,20 @@ const ConfigurationComponent = () => {
       ) : (
         <p>Loading data...</p>
       )}
+      <div className="flex align-center gap-0">
+        <button
+          type="button"
+          className="text-text-color border border-card-color focus:outline-none hover:bg-card-color focus:ring-4 focus:ring-gray-100 font-medium rounded-xs text-sm px-5 py-1.5  text-xs "
+        >
+          vertical
+        </button>
+        <button
+          type="button"
+          className="text-blue-50 bg-blue-700 border border-blue-700 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-xs text-sm px-5 py-1.5  text-xs"
+        >
+          horizontal
+        </button>
+      </div>
     </form>
   );
 };

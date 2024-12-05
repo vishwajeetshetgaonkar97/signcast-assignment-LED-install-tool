@@ -63,7 +63,7 @@ const FabricCanvas: React.FC = () => {
   }, []);
 
   return (
-    <div ref={containerRef} className="w-[80%] border-2">
+    <div ref={containerRef} className="w-[80%] border-2 border-border-color">
       <canvas
         ref={canvasRef}
         width={canvasSize.width}

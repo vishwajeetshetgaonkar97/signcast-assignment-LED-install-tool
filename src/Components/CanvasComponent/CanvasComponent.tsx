@@ -151,7 +151,7 @@ const CanvasComponent: React.FC<CanvusComponentProps> = ({ testArray }) => {
         <>Loading...</>
       )} */}
 
-      <FabricJSCanvas className="sample-canvas border-2 aspect-video" onReady={onReady} />
+      <FabricJSCanvas className="sample-canvas border-2  aspect-video" onReady={onReady} />
     </>
   );
 };

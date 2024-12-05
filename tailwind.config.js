@@ -9,13 +9,10 @@ export default {
       colors: {
         "bg-color": "rgb(var(--background))",
         "text-color": "rgb(var(--text))",
-        border: "rgb(var(--border))",
-        card: "rgb(var(--card))",
-        "copy-primary": "rgb(var(--copy-primary))",
-        "copy-secondary": "rgb(var(--copy-secondary))",
-        cta: "rgb(var(--cta))",
-        "cta-active": "rgb(var(--cta-active))",
-        "cta-text": "rgb(var(--cta-text))",
+        "border-color": "rgb(var(--border))",
+        "card-color": "rgb(var(--card))",
+        "card-text-color": "rgb(var(--card-text))",
+        
       },
     },
   },
