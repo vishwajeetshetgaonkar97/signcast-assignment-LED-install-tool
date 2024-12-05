@@ -16,7 +16,7 @@ const DrawingToolComponent = () => {
   ]);
 
   return (
-    <div className="flex align-center justify-center w-full gap-4">
+    <div className="flex h-full pb-2 align-center justify-center w-full gap-4">
       
       <FabricCanvas/>
     

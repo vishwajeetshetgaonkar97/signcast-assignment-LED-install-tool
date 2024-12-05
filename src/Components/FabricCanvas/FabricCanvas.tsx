@@ -19,6 +19,12 @@ const FabricCanvas: React.FC = () => {
     const parentWidth = containerRef.current?.offsetWidth || 0;
     const parentHeight = (parentWidth * 9) / 16; // Maintaining 16:9 aspect ratio
     setCanvasSize({ width: parentWidth, height: parentHeight });
+
+    // Resize fabric canvas dynamically
+    if (fabricCanvasRef.current) {
+      fabricCanvasRef.current.setWidth(parentWidth);
+      fabricCanvasRef.current.setHeight(parentHeight);
+    }
   };
 
   useLayoutEffect(() => {
@@ -31,9 +37,11 @@ const FabricCanvas: React.FC = () => {
       const rect = new fabric.Rect({
         left: 100,
         top: 100,
-        fill: 'red',
-        width: 50,
-        height: 50,
+        fill: 'transparent',
+        width: 150,
+        height: 100,
+        stroke: 'black',
+        strokeWidth: 2,
       });
       canvas.add(rect);
     }
@@ -43,8 +51,8 @@ const FabricCanvas: React.FC = () => {
 
     // Update canvas size on window resize or container resize
     window.addEventListener('resize', updateCanvasSize);
+    const resizeObserver = new ResizeObserver(updateCanvasSize);
     if (containerRef.current) {
-      const resizeObserver = new ResizeObserver(updateCanvasSize);
       resizeObserver.observe(containerRef.current);
     }
 
@@ -52,7 +60,6 @@ const FabricCanvas: React.FC = () => {
     return () => {
       window.removeEventListener('resize', updateCanvasSize);
       if (containerRef.current) {
-        const resizeObserver = new ResizeObserver(updateCanvasSize);
         resizeObserver.disconnect();
       }
       if (fabricCanvasRef.current) {
@@ -63,7 +70,7 @@ const FabricCanvas: React.FC = () => {
   }, []);
 
   return (
-    <div ref={containerRef} className="w-[80%] border-2 border-border-color">
+    <div ref={containerRef} className="w-[82%] border-2 border-border-color">
       <canvas
         ref={canvasRef}
         width={canvasSize.width}
