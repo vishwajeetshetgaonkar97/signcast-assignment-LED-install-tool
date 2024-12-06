@@ -44,24 +44,22 @@ const ConfigurationComponent = () => {
     }
 
     const updatedValues = { ...selectedValues, [field]: updatedValue };
-
-    // Update selectedConfiguration in context
     setSelectedValues(updatedValues);
-    setSelectedConfiguration(updatedValues); // This updates the context with the selected configuration
+    setSelectedConfiguration(updatedValues);
   };
 
   console.log("Selected Configuration:", selectedConfiguration);
 
   return (
     <form className="h-max px-4 py-3 space-y-0 border border-border-color">
-      <h4 className="font-semibold text-sm pb-2 text-opacity-5">Configurations</h4>
+      <h4 className="font-semibold text-sm pb-1 opacity-80 ">Configurations</h4>
 
       <div className="pb-2">
         <label
           htmlFor="screenMFR"
-          className="block mb-1 text-xs font-small text-text-color"
+          className="block mb-1 text-xs font-small text-text-color opacity-50"
         >
-          Select Screen MFR
+          Screen
         </label>
         <select
           id="screenMFR"
@@ -81,9 +79,9 @@ const ConfigurationComponent = () => {
       <div className="pb-2">
         <label
           htmlFor="mediaPlayerMFR"
-          className="block mb-1 text-xs font-small text-text-color"
+          className="block mb-1 text-xs font-small text-text-color opacity-50"
         >
-          Select Media Player MFR
+          Media Player
         </label>
         <select
           id="mediaPlayerMFR"
@@ -103,9 +101,9 @@ const ConfigurationComponent = () => {
       <div className="pb-2">
         <label
           htmlFor="mount"
-          className="block mb-1 text-xs font-small text-text-color"
+          className="block mb-1 text-xs font-small text-text-color opacity-50"
         >
-          Select Mount
+          Mount
         </label>
         <select
           id="mount"
@@ -125,9 +123,9 @@ const ConfigurationComponent = () => {
       <div className="pb-2">
         <label
           htmlFor="receptacleBox"
-          className="block mb-1 text-xs font-small text-text-color"
+          className="block mb-1 text-xs font-small text-text-color opacity-50"
         >
-          Select Receptacle Box
+          Receptacle Box
         </label>
         <select
           id="receptacleBox"
@@ -144,16 +142,16 @@ const ConfigurationComponent = () => {
         </select>
       </div>
 
-      <div className="flex align-center gap-0">
+      <div className="flex align-center gap-0 pt-1">
         <button
           type="button"
-          className="text-text-color border border-card-color focus:outline-none hover:bg-card-color focus:ring-4 focus:ring-gray-100 font-medium rounded-xs text-sm px-5 py-1.5 text-xs"
+          className="text-text-color w-full py-2 border border-border-color  focus:outline-none hover:bg-card-color focus:ring-4 focus:ring-gray-100 font-medium rounded-xs text-sm px-5 py-1.5 text-xs"
         >
           Vertical
         </button>
         <button
           type="button"
-          className="text-blue-50 bg-blue-700 border border-blue-700 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-xs text-sm px-5 py-1.5 text-xs"
+          className="text-blue-50 w-full py-2 bg-blue-700 border border-blue-700 focus:outline-none hover:bg-blue-600 focus:ring-4 focus:ring-gray-100 font-medium rounded-xs text-sm px-5 py-1.5 text-xs"
         >
           Horizontal
         </button>
