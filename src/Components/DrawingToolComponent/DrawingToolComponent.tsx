@@ -78,13 +78,12 @@ const DrawingToolComponent = () => {
           <MountsDataContext.Provider value={MountsDataContextValue}>
             <ReceptacleBoxDataContext.Provider value={ReceptacleBoxDataContextValue}>
               <SelectedConfigurationContext.Provider value={SelectedConfigurationContextValue}>
-              
-              <div className="flex h-full pb-2 align-center justify-center w-full gap-4">
-                <FabricCanvas
-                />
-                <ConfigurationComponent
-                />
-              </div>
+
+                <div className="flex h-full pb-2 align-center justify-center w-full gap-4">
+                  <FabricCanvas />
+                  <ConfigurationComponent />
+                </div>
+
               </SelectedConfigurationContext.Provider>
             </ReceptacleBoxDataContext.Provider>
           </MountsDataContext.Provider>
