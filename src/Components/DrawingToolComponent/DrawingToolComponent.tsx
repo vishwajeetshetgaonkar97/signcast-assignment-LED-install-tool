@@ -7,12 +7,14 @@ import {
   MediaPlayerMFR,
   Mounts,
   ReceptacleBox,
+  AdditionalConfiguration,
 } from "../../types/GoogleSheetDataTypes";
 import ScreenMFRDataContext from "../../Contexts/ScreenMFRDataContext";
-import MediaPlayerMFRDataContext from "../../Contexts/MediaPlayerMFRDataContext";
+import MediaPlayerMFRDataContext from "../../Contexts//MediaPlayerMFRDataContext";
 import MountsDataContext from "../../Contexts/MountsDataContext";
 import ReceptacleBoxDataContext from "../../Contexts/ReceptacleBoxDataContext";
 import SelectedConfigurationContext from "../../Contexts/SelectedConfigurationContext";
+import AdditionalConfigurationContext from "../../Contexts/AdditionalConfigurationContext";
 
 const DrawingToolComponent = () => {
   const [screenMFRData, setScreenMFRData] = useState<ScreenMFR[]>([]);
@@ -26,6 +28,14 @@ const DrawingToolComponent = () => {
     mount?: Mounts;
     receptacleBox?: ReceptacleBox;
   }>({});
+
+  const [additionalConfiguration, setAdditionalConfiguration] = useState<AdditionalConfiguration>({
+    orientation: "vertical", 
+    nicheType: "flat wall", 
+    distanceFromFloor: 0, 
+    nicheDepth: 0, 
+  });
+
 
   const fetchDatabaseData = async () => {
     try {
@@ -70,6 +80,11 @@ const DrawingToolComponent = () => {
     [selectedConfiguration, setSelectedConfiguration]
   );
 
+  const AdditionalConfigurationContextValue = useMemo(
+    () => ({ additionalConfiguration, setAdditionalConfiguration }),
+    [additionalConfiguration, setAdditionalConfiguration]
+  );
+
 
   return (
     <>
@@ -78,12 +93,14 @@ const DrawingToolComponent = () => {
           <MountsDataContext.Provider value={MountsDataContextValue}>
             <ReceptacleBoxDataContext.Provider value={ReceptacleBoxDataContextValue}>
               <SelectedConfigurationContext.Provider value={SelectedConfigurationContextValue}>
+              <AdditionalConfigurationContext.Provider value={AdditionalConfigurationContextValue}>
 
                 <div className="flex h-full pb-2 align-center justify-center w-full gap-4">
                   <FabricCanvas />
                   <ConfigurationComponent />
                 </div>
-
+                
+                </AdditionalConfigurationContext.Provider>
               </SelectedConfigurationContext.Provider>
             </ReceptacleBoxDataContext.Provider>
           </MountsDataContext.Provider>

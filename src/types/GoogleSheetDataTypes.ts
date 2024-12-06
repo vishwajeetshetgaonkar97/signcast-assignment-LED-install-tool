@@ -13,3 +13,10 @@ export type Mounts = {
 export type ReceptacleBox = {
   [key: string]: string | number;
 };
+
+export type AdditionalConfiguration = {
+  orientation: "vertical" | "horizontal";
+  nicheType: "flat wall" | "other";
+  distanceFromFloor: number;
+  nicheDepth: number;
+};

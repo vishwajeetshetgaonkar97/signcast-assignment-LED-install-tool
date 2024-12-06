@@ -4,6 +4,7 @@ import MediaPlayerMFRDataContext from "../../Contexts/MediaPlayerMFRDataContext"
 import MountsDataContext from "../../Contexts/MountsDataContext";
 import ReceptacleBoxDataContext from "../../Contexts/ReceptacleBoxDataContext";
 import SelectedConfigurationContext from "../../Contexts/SelectedConfigurationContext";
+import AdditionalConfigurationContext from "../../Contexts/AdditionalConfigurationContext";
 
 const ConfigurationComponent = () => {
   const { screenMFRData } = useContext(ScreenMFRDataContext);
@@ -11,6 +12,7 @@ const ConfigurationComponent = () => {
   const { mountsData } = useContext(MountsDataContext);
   const { receptacleBoxData } = useContext(ReceptacleBoxDataContext);
   const { selectedConfiguration, setSelectedConfiguration } = useContext(SelectedConfigurationContext);
+  const { additionalConfiguration, setAdditionalConfiguration } = useContext(AdditionalConfigurationContext);
 
   // Default values initialization
   const [selectedValues, setSelectedValues] = useState({
@@ -18,6 +20,14 @@ const ConfigurationComponent = () => {
     mediaPlayerMFR: mediaPlayerMFRData[0] || null,
     mount: mountsData[0] || null,
     receptacleBox: receptacleBoxData[0] || null,
+  });
+
+  // Additional Configuration state initialization
+  const [additionalConfig, setAdditionalConfig] = useState({
+    orientation: additionalConfiguration?.orientation || "horizontal", // default
+    nicheType: additionalConfiguration?.nicheType || "flat wall", // default
+    distanceFromFloor: additionalConfiguration?.distanceFromFloor || 0, // default
+    nicheDepth: additionalConfiguration?.nicheDepth || 0, // default
   });
 
   useEffect(() => {
@@ -31,7 +41,6 @@ const ConfigurationComponent = () => {
   }, [screenMFRData, mediaPlayerMFRData, mountsData, receptacleBoxData]);
 
   const handleSelectionChange = (field: string, value: string) => {
-    // Look up the full object based on the selected value
     let updatedValue = null;
     if (field === "screenMFR") {
       updatedValue = screenMFRData.find(option => option["Screen MFR"] === value) || null;
@@ -48,12 +57,20 @@ const ConfigurationComponent = () => {
     setSelectedConfiguration(updatedValues);
   };
 
+  const handleAdditionalConfigChange = (field: string, value: string | number) => {
+    const updatedConfig = { ...additionalConfig, [field]: value };
+    setAdditionalConfig(updatedConfig);
+    setAdditionalConfiguration(updatedConfig); // Update context
+  };
+
   console.log("Selected Configuration:", selectedConfiguration);
+  console.log("Additional Configuration:", additionalConfiguration);
 
   return (
     <form className="h-max px-4 py-3 space-y-0 border border-border-color">
       <h4 className="font-semibold text-sm pb-1 opacity-80 ">Configurations</h4>
 
+      {/* Screen MFR */}
       <div className="pb-2">
         <label
           htmlFor="screenMFR"
@@ -76,6 +93,7 @@ const ConfigurationComponent = () => {
         </select>
       </div>
 
+      {/* Media Player */}
       <div className="pb-2">
         <label
           htmlFor="mediaPlayerMFR"
@@ -98,6 +116,7 @@ const ConfigurationComponent = () => {
         </select>
       </div>
 
+      {/* Mount */}
       <div className="pb-2">
         <label
           htmlFor="mount"
@@ -120,6 +139,7 @@ const ConfigurationComponent = () => {
         </select>
       </div>
 
+      {/* Receptacle Box */}
       <div className="pb-2">
         <label
           htmlFor="receptacleBox"
@@ -142,19 +162,72 @@ const ConfigurationComponent = () => {
         </select>
       </div>
 
+      {/* Additional Configuration: Orientation */}
       <div className="flex align-center gap-0 pt-1">
         <button
           type="button"
-          className="text-text-color w-full py-2 border border-border-color  focus:outline-none hover:bg-card-color focus:ring-4 focus:ring-gray-100 font-medium rounded-xs text-sm px-5 py-1.5 text-xs"
+          className={`w-full text-sm py-2 ${additionalConfig.orientation === "vertical" ? "bg-blue-700 text-blue-50" : "text-text-color border border-border-color"} focus:outline-none hover:bg-card-color `}
+          onClick={() => handleAdditionalConfigChange("orientation", "vertical")}
         >
           Vertical
         </button>
         <button
           type="button"
-          className="text-blue-50 w-full py-2 bg-blue-700 border border-blue-700 focus:outline-none hover:bg-blue-600 focus:ring-4 focus:ring-gray-100 font-medium rounded-xs text-sm px-5 py-1.5 text-xs"
+          className={`w-full text-sm py-2 ${additionalConfig.orientation === "horizontal" ? "bg-blue-700 text-blue-50" : "text-text-color border border-border-color"} focus:outline-none hover:bg-card-color`}
+          onClick={() => handleAdditionalConfigChange("orientation", "horizontal")}
         >
           Horizontal
         </button>
+      </div>
+
+      {/* Additional Configuration: Niche Type */}
+      <div className="flex align-center gap-0 pt-1">
+        <button
+          type="button"
+          className={`w-full py-2  text-sm ${additionalConfig.nicheType === "niche" ? "bg-blue-700 text-blue-50" : "text-text-color border border-border-color"} focus:outline-none hover:bg-card-color`}
+          onClick={() => handleAdditionalConfigChange("nicheType", "niche")}
+        >
+          Niche
+        </button>
+        <button
+          type="button"
+          className={`w-full py-2 text-sm  ${additionalConfig.nicheType === "flat wall" ? "bg-blue-700 text-blue-50" : "text-text-color border border-border-color"} focus:outline-none hover:bg-card-color`}
+          onClick={() => handleAdditionalConfigChange("nicheType", "flat wall")}
+        >
+          Flat Wall
+        </button>
+      </div>
+
+      <div className="flex align-center gap-0 pt-1 ">
+        <label
+          htmlFor="distanceFromFloor"
+          className="flex content-center items-center justify-center mb-1 text-xs font-small text-text-color opacity-50 border border-border-color bg-border-color text-card-text-color w-1/2 h-9 px-1 text-center"
+        >
+        Floor Distance
+        </label>
+        <input
+          type="number"
+          id="distanceFromFloor"
+          value={additionalConfig.distanceFromFloor}
+          onChange={(e) => handleAdditionalConfigChange("distanceFromFloor", e.target.value)}
+          className="border bg-card-color border-border-color text-card-text-color text-sm focus:ring-blue-500 focus:border-blue-500 block w-1/2 h-9 p-1.5 text-center"
+        />
+      </div>
+
+      <div className="flex align-center gap-0 pt-1 ">
+        <label
+          htmlFor="depth"
+          className="flex content-center items-center justify-center mb-1 text-xs font-small text-text-color opacity-50 border border-border-color bg-border-color text-card-text-color w-1/2 h-9 px-1 text-center"
+        >
+          Niche Depth Vr.
+        </label>
+        <input
+          type="number"
+          id="depth"
+          value={additionalConfig.nicheDepth}
+          onChange={(e) => handleAdditionalConfigChange("nicheDepth", e.target.value)}
+          className="border bg-card-color border-border-color text-card-text-color text-sm focus:ring-blue-500 focus:border-blue-500 block w-1/2 h-9 p-1.5 text-center"
+        />
       </div>
     </form>
   );
