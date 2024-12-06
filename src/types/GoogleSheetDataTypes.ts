@@ -1,27 +1,15 @@
-
-type AthleteTeamInfo = {
-  team_id: string;
-  name: string;
-  sport: string;
-  logo: string;
-  position: string;
-  jersey_num: number;
+export type ScreenMFR = {
+  [key: string]: string | number;
 };
 
-interface Athlete extends UserDoc {
-  sport: string;
-  position: string;
-  state: string;
-  isProAthlete: 'Y' | 'N';
-  summarised_stats: SummarisedStats;
-  best_team_name: string;
-  DOB: string;
-  aadhar_num: string;
-  cm_height: number;
-  kg_weight: number;
-  is_featured: string;
-  featured_video: Article;
-  teams_info: Record<string, AthleteTeamInfo>;
-}
+export type MediaPlayerMFR = {
+  [key: string]: string | number;
+};
 
-export type { Athlete };
+export type Mounts = {
+  [key: string]: string | number;
+};
+
+export type ReceptacleBox = {
+  [key: string]: string | number;
+};

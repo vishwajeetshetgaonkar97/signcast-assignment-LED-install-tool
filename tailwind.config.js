@@ -17,5 +17,5 @@ export default {
     },
   },
   plugins: [],
-  darkMode: false, // Since there are more than two modes, disable darkMode default handling.
+  darkMode: "media", 
 };
