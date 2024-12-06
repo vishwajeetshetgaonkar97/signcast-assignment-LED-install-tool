@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Papa from "papaparse";
+import ScreenMFRDataContext from "../../Contexts/ScreenMFRDataContext";
 
 interface Database {
   screenMFR: string;
@@ -52,8 +53,13 @@ const ConfigurationComponent = () => {
     return Array.from(new Set(data.map((row) => String(row[field]))));
   };
 
+
+  const { screenMFRData } = useContext(ScreenMFRDataContext);
+
+  console.log("inņdfv", screenMFRData);
+
   return (
-    <form className=" h-max px-4 py-3 space-y-0 border-2 border-border-color">
+    <form className=" h-max px-4 py-3 space-y-0 border border-border-color">
       <h4 className="font-semibold text-sm pb-2 text-opacity-5">
         Configurations
       </h4>
