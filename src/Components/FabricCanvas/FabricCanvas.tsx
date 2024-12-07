@@ -1,7 +1,6 @@
 import React, { useRef, useState, useLayoutEffect } from 'react';
 import * as fabric from 'fabric';
 
-// Define types for the canvas size state
 interface CanvasSize {
   width: number;
   height: number;
@@ -12,9 +11,8 @@ const FabricCanvas: React.FC = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [canvasSize, setCanvasSize] = useState<CanvasSize>({ width: 0, height: 0 });
 
-  const fabricCanvasRef = useRef<fabric.Canvas | null>(null); // Ref to store fabric canvas instance
+  const fabricCanvasRef = useRef<fabric.Canvas | null>(null);
 
-  // Update canvas size based on parent container's width
   const updateCanvasSize = () => {
     const parentWidth = containerRef.current?.offsetWidth || 0;
     const parentHeight = (parentWidth * 9) / 16; // Maintaining 16:9 aspect ratio
@@ -25,15 +23,40 @@ const FabricCanvas: React.FC = () => {
       fabricCanvasRef.current.setWidth(parentWidth);
       fabricCanvasRef.current.setHeight(parentHeight);
     }
+
+    // Scale the rectangle based on new canvas size
+    scaleRectangle(parentWidth, parentHeight);
+  };
+
+  const scaleRectangle = (canvasWidth: number, canvasHeight: number) => {
+    if (fabricCanvasRef.current) {
+      const rect = fabricCanvasRef.current.item(0); // Get the first object (rectangle)
+
+      if (rect) {
+        const rectWidthPercentage = 0.15; // 15% of the canvas width
+        const rectHeightPercentage = 0.1; // 10% of the canvas height
+        const rectPositionXPercentage = 0.1; // 10% of the canvas width from left
+        const rectPositionYPercentage = 0.1; // 10% of the canvas height from top
+
+        // Update rectangle size and position
+        rect.set({
+          width: canvasWidth * rectWidthPercentage,
+          height: canvasHeight * rectHeightPercentage,
+          left: canvasWidth * rectPositionXPercentage,
+          top: canvasHeight * rectPositionYPercentage,
+        });
+
+        fabricCanvasRef.current.renderAll(); // Re-render canvas to apply changes
+      }
+    }
   };
 
   useLayoutEffect(() => {
-    // Initialize the fabric canvas only once
     if (canvasRef.current && !fabricCanvasRef.current) {
       const canvas = new fabric.Canvas(canvasRef.current);
       fabricCanvasRef.current = canvas;
 
-      // Add a rectangle object
+      // Add a rectangle object initially
       const rect = new fabric.Rect({
         left: 100,
         top: 100,
@@ -46,36 +69,33 @@ const FabricCanvas: React.FC = () => {
       canvas.add(rect);
     }
 
-    // Perform an initial canvas size update
     updateCanvasSize();
 
-    // Update canvas size on window resize or container resize
     window.addEventListener('resize', updateCanvasSize);
     const resizeObserver = new ResizeObserver(updateCanvasSize);
     if (containerRef.current) {
       resizeObserver.observe(containerRef.current);
     }
 
-    // Cleanup: remove resize listener and dispose of the fabric canvas instance
     return () => {
       window.removeEventListener('resize', updateCanvasSize);
       if (containerRef.current) {
         resizeObserver.disconnect();
       }
       if (fabricCanvasRef.current) {
-        fabricCanvasRef.current.dispose(); // Clean up fabric canvas
+        fabricCanvasRef.current.dispose();
         fabricCanvasRef.current = null;
       }
     };
   }, []);
 
   return (
-    <div ref={containerRef} className="w-[82%] border border-border-color">
+    <div ref={containerRef} className="w-[82%] h-full">
       <canvas
         ref={canvasRef}
         width={canvasSize.width}
         height={canvasSize.height}
-        style={{ width: '100%', height: '100%' }}
+         className="w-full h-full border border-border-color aspect-video"
       ></canvas>
     </div>
   );
