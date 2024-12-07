@@ -51,22 +51,75 @@ const FabricCanvas: React.FC = () => {
     }
   };
 
+  const createRectangle = (width: number, height: number, left: number, top: number, fillColor?: string, strokeColor?: string, strokeWidth?: number, opacity?: number, isDashed?: boolean, isdraggable?: boolean) => {
+    if (fabricCanvasRef.current) {
+      const rect = new fabric.Rect({
+        left: left,
+        top: top,
+        fill: fillColor || 'transparent',
+        width: width,
+        height: height,
+        stroke: strokeColor || 'black',
+        strokeWidth: strokeWidth || 2,
+        opacity: opacity || 1,
+        isDashed: isDashed || false,
+        isdraggable: isdraggable || false,
+      });
+      fabricCanvasRef.current.add(rect);
+    }
+  };
+
+  const createRectangleWithText = (
+    width: number,
+    height: number,
+    left: number,
+    top: number,
+    fillColor?: string,
+    strokeColor?: string,
+    strokeWidth?: number,
+    text?: string,
+    textColor?: string
+  ) => {
+    if (fabricCanvasRef.current) {
+      // Create the rectangle
+      const rect = new fabric.Rect({
+        left: left,
+        top: top,
+        fill: fillColor || 'transparent',
+        width: width,
+        height: height,
+        stroke: strokeColor || 'black',
+        strokeWidth: strokeWidth || 2,
+      });
+  
+      // Create the text
+      const textObj = new fabric.Text(text || 'Default Text', {
+        left: left + width / 2,
+        top: top + height / 2,
+        fontSize: 20,
+        fill: textColor || 'black',
+        originX: 'center', // Align text center horizontally
+        originY: 'center', // Align text center vertically
+      });
+  
+      // Group the rectangle and text together
+      const group = new fabric.Group([rect, textObj], {
+        left: left,
+        top: top,
+      });
+  
+      fabricCanvasRef.current.add(group);
+    }
+  };
+
+  
   useLayoutEffect(() => {
     if (canvasRef.current && !fabricCanvasRef.current) {
       const canvas = new fabric.Canvas(canvasRef.current);
       fabricCanvasRef.current = canvas;
 
-      // Add a rectangle object initially
-      const rect = new fabric.Rect({
-        left: 100,
-        top: 100,
-        fill: 'transparent',
-        width: 150,
-        height: 100,
-        stroke: 'black',
-        strokeWidth: 2,
-      });
-      canvas.add(rect);
+      createRectangle(150, 100, 100, 100);
+      createRectangleWithText(150, 100, 100, 100);
     }
 
     updateCanvasSize();
@@ -95,7 +148,7 @@ const FabricCanvas: React.FC = () => {
         ref={canvasRef}
         width={canvasSize.width}
         height={canvasSize.height}
-         className="w-full h-full border border-border-color aspect-video"
+        className="w-full h-full border border-border-color aspect-video"
       ></canvas>
     </div>
   );
