@@ -87,7 +87,7 @@ const ConfigurationComponent = () => {
             id="screenMFR"
             value={selectedValues.screenMFR?.["Screen MFR"] || ""}
             onChange={(e) => handleSelectionChange("screenMFR", e.target.value)}
-            className="border bg-card-color border-border-color text-card-text-color text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
+            className="border bg-card-color border-border-color text-card-text-color text-xs focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
           >
             <option value="">Select Screen MFR</option>
             {screenMFRData.map((option, index) => (
@@ -110,7 +110,7 @@ const ConfigurationComponent = () => {
             id="mediaPlayerMFR"
             value={selectedValues.mediaPlayerMFR?.["MFG. PART"] || ""}
             onChange={(e) => handleSelectionChange("mediaPlayerMFR", e.target.value)}
-            className="border bg-card-color border-border-color text-card-text-color text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
+            className="border bg-card-color border-border-color text-card-text-color text-xs focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
           >
             <option value="">Select Media Player MFR</option>
             {mediaPlayerMFRData.map((option, index) => (
@@ -132,7 +132,7 @@ const ConfigurationComponent = () => {
             id="mount"
             value={selectedValues.mount?.["MFG. PART"] || ""}
             onChange={(e) => handleSelectionChange("mount", e.target.value)}
-            className="border bg-card-color border-border-color text-card-text-color text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
+            className="border bg-card-color border-border-color text-card-text-color text-xs focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
           >
             <option value="">Select Mount</option>
             {mountsData.map((option, index) => (
@@ -155,7 +155,7 @@ const ConfigurationComponent = () => {
             id="receptacleBox"
             value={selectedValues.receptacleBox?.["MFG. PART"] || ""}
             onChange={(e) => handleSelectionChange("receptacleBox", e.target.value)}
-            className="border bg-card-color border-border-color text-card-text-color text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
+            className="border bg-card-color border-border-color text-card-text-color text-xs focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
           >
             <option value="">Select Receptacle Box</option>
             {receptacleBoxData.map((option, index) => (
@@ -170,14 +170,14 @@ const ConfigurationComponent = () => {
         <div className="flex align-center gap-0 pt-1">
           <button
             type="button"
-            className={`w-full text-sm py-2 ${additionalConfig.orientation === "vertical" ? "bg-blue-700 text-blue-50" : "text-text-color border border-border-color"} focus:outline-none hover:bg-card-color `}
+            className={`w-full text-xs py-2 ${additionalConfig.orientation === "vertical" ? "bg-blue-700 text-blue-50" : "text-text-color border border-border-color"} focus:outline-none hover:bg-card-color `}
             onClick={() => handleAdditionalConfigChange("orientation", "vertical")}
           >
             Vertical
           </button>
           <button
             type="button"
-            className={`w-full text-sm py-2 ${additionalConfig.orientation === "horizontal" ? "bg-blue-700 text-blue-50" : "text-text-color border border-border-color"} focus:outline-none hover:bg-card-color`}
+            className={`w-full text-xs py-2 ${additionalConfig.orientation === "horizontal" ? "bg-blue-700 text-blue-50" : "text-text-color border border-border-color"} focus:outline-none hover:bg-card-color`}
             onClick={() => handleAdditionalConfigChange("orientation", "horizontal")}
           >
             Horizontal
@@ -188,14 +188,14 @@ const ConfigurationComponent = () => {
         <div className="flex align-center gap-0 pt-1">
           <button
             type="button"
-            className={`w-full py-2  text-sm ${additionalConfig.nicheType === "niche" ? "bg-blue-700 text-blue-50" : "text-text-color border border-border-color"} focus:outline-none hover:bg-card-color`}
+            className={`w-full py-2  text-xs ${additionalConfig.nicheType === "niche" ? "bg-blue-700 text-blue-50" : "text-text-color border border-border-color"} focus:outline-none hover:bg-card-color`}
             onClick={() => handleAdditionalConfigChange("nicheType", "niche")}
           >
             Niche
           </button>
           <button
             type="button"
-            className={`w-full py-2 text-sm  ${additionalConfig.nicheType === "flat wall" ? "bg-blue-700 text-blue-50" : "text-text-color border border-border-color"} focus:outline-none hover:bg-card-color`}
+            className={`w-full py-2 text-xs  ${additionalConfig.nicheType === "flat wall" ? "bg-blue-700 text-blue-50" : "text-text-color border border-border-color"} focus:outline-none hover:bg-card-color`}
             onClick={() => handleAdditionalConfigChange("nicheType", "flat wall")}
           >
             Flat Wall
@@ -214,7 +214,7 @@ const ConfigurationComponent = () => {
             id="distanceFromFloor"
             value={additionalConfig.distanceFromFloor}
             onChange={(e) => handleAdditionalConfigChange("distanceFromFloor", e.target.value)}
-            className="border bg-card-color border-border-color text-card-text-color text-sm focus:ring-blue-500 focus:border-blue-500 block w-1/2 h-9 p-1.5 text-center"
+            className="border bg-card-color border-border-color text-card-text-color text-xs focus:ring-blue-500 focus:border-blue-500 block w-1/2 h-9 p-1.5 text-center"
           />
         </div>
   
@@ -230,7 +230,7 @@ const ConfigurationComponent = () => {
             id="nicheDepth"
             value={additionalConfig.nicheDepth}
             onChange={(e) => handleAdditionalConfigChange("nicheDepth", e.target.value)}
-            className="border bg-card-color border-border-color text-card-text-color text-sm focus:ring-blue-500 focus:border-blue-500 block w-1/2 h-9 p-1.5 text-center"
+            className="border bg-card-color border-border-color text-card-text-color text-xs focus:ring-blue-500 focus:border-blue-500 block w-1/2 h-9 p-1.5 text-center"
           />
         </div>
         <div className="flex align-center flex-col gap-0 pt-2">
@@ -254,7 +254,7 @@ const ConfigurationComponent = () => {
               id="rBoxHeight"
               value={additionalConfig.rBoxHeight}
               onChange={(e) => handleAdditionalConfigChange("rBoxHeight", e.target.value)}
-              className="border bg-card-color border-border-color text-card-text-color text-sm focus:ring-blue-500 focus:border-blue-500 block w-1/2 h-9 p-1.5 text-center"
+              className="border bg-card-color border-border-color text-card-text-color text-xs focus:ring-blue-500 focus:border-blue-500 block w-1/2 h-9 p-1.5 text-center"
             />
           </div>
           <div className="flex align-center gap-0 pt-1 ">
@@ -269,7 +269,7 @@ const ConfigurationComponent = () => {
               id="rBoxWidth"
               value={additionalConfig.rBoxWidth}
               onChange={(e) => handleAdditionalConfigChange("rBoxWidth", e.target.value)}
-              className="border bg-card-color border-border-color text-card-text-color text-sm focus:ring-blue-500 focus:border-blue-500 block w-1/2 h-9 p-1.5 text-center"
+              className="border bg-card-color border-border-color text-card-text-color text-xs focus:ring-blue-500 focus:border-blue-500 block w-1/2 h-9 p-1.5 text-center"
             />
           </div>
           <div className="flex align-center gap-0 pt-1 ">
@@ -284,7 +284,7 @@ const ConfigurationComponent = () => {
               id="rBoxDepth"
               value={additionalConfig.rBoxDepth}
               onChange={(e) => handleAdditionalConfigChange("rBoxDepth", e.target.value)}
-              className="border bg-card-color border-border-color text-card-text-color text-sm focus:ring-blue-500 focus:border-blue-500 block w-1/2 h-9 p-1.5 text-center"
+              className="border bg-card-color border-border-color text-card-text-color text-xs focus:ring-blue-500 focus:border-blue-500 block w-1/2 h-9 p-1.5 text-center"
             />
           </div>
         </div>

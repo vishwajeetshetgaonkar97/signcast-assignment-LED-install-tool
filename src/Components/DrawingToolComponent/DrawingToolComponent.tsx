@@ -8,6 +8,7 @@ import {
   Mounts,
   ReceptacleBox,
   AdditionalConfiguration,
+  DescriptionConfig,
 } from "../../types/GoogleSheetDataTypes";
 import ScreenMFRDataContext from "../../Contexts/ScreenMFRDataContext";
 import MediaPlayerMFRDataContext from "../../Contexts//MediaPlayerMFRDataContext";
@@ -15,6 +16,7 @@ import MountsDataContext from "../../Contexts/MountsDataContext";
 import ReceptacleBoxDataContext from "../../Contexts/ReceptacleBoxDataContext";
 import SelectedConfigurationContext from "../../Contexts/SelectedConfigurationContext";
 import AdditionalConfigurationContext from "../../Contexts/AdditionalConfigurationContext";
+import DescripotionDataContext from "../../Contexts/DescripotionDataContext";
 
 const DrawingToolComponent = () => {
   const [screenMFRData, setScreenMFRData] = useState<ScreenMFR[]>([]);
@@ -30,13 +32,21 @@ const DrawingToolComponent = () => {
   }>({});
 
   const [additionalConfiguration, setAdditionalConfiguration] = useState<AdditionalConfiguration>({
-    orientation: "vertical", 
-    nicheType: "flat wall", 
-    distanceFromFloor: 0, 
-    nicheDepth: 0, 
+    orientation: "vertical",
+    nicheType: "flat wall",
+    distanceFromFloor: 0,
+    nicheDepth: 0,
     rBoxHeight: 6.6,
     rBoxWidth: 6.012,
     rBoxDepth: 3.75,
+  });
+
+  const [descriptionConfiguration, setDescriptionConfiguration] = useState<DescriptionConfig>({
+    title: "",
+    drawer: "",
+    department: "",
+    screenSize: "",
+    date: new Date().toISOString().split('T')[0],
   });
 
 
@@ -88,6 +98,10 @@ const DrawingToolComponent = () => {
     [additionalConfiguration, setAdditionalConfiguration]
   );
 
+  const DescriptionConfigurationContextValue = useMemo(
+    () => ({ descriptionConfiguration, setDescriptionConfiguration }),
+    [descriptionConfiguration, setDescriptionConfiguration]
+  );
 
   return (
     <>
@@ -96,13 +110,15 @@ const DrawingToolComponent = () => {
           <MountsDataContext.Provider value={MountsDataContextValue}>
             <ReceptacleBoxDataContext.Provider value={ReceptacleBoxDataContextValue}>
               <SelectedConfigurationContext.Provider value={SelectedConfigurationContextValue}>
-              <AdditionalConfigurationContext.Provider value={AdditionalConfigurationContextValue}>
+                <AdditionalConfigurationContext.Provider value={AdditionalConfigurationContextValue}>
+                  <DescripotionDataContext.Provider value={DescriptionConfigurationContextValue}>
 
-                <div className="flex h-full pb-2 align-center justify-center w-full gap-4">
-                  <FabricCanvas />
-                  <ConfigurationSectionComponent />
-                </div>
-                
+                    <div className="flex h-full pb-2 align-center justify-center w-full gap-4">
+                      <FabricCanvas />
+                      <ConfigurationSectionComponent />
+                    </div>
+
+                  </DescripotionDataContext.Provider>
                 </AdditionalConfigurationContext.Provider>
               </SelectedConfigurationContext.Provider>
             </ReceptacleBoxDataContext.Provider>

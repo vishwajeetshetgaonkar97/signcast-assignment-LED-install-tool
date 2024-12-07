@@ -23,3 +23,11 @@ export type AdditionalConfiguration = {
   rBoxWidth: number;
   rBoxDepth: number;
 };
+
+export type DescriptionConfig = {
+  title: string, 
+  drawer: string, 
+  department: string, 
+  screenSize: string, 
+  date: string,
+};
