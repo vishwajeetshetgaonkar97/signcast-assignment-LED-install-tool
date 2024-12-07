@@ -36,13 +36,14 @@ const ConfigurationComponent = () => {
     });
   
     useEffect(() => {
-      // When context data updates, set the first value as the default
+     
       setSelectedValues({
         screenMFR: screenMFRData[0] || null,
         mediaPlayerMFR: mediaPlayerMFRData[0] || null,
         mount: mountsData[0] || null,
         receptacleBox: receptacleBoxData[0] || null,
       });
+ 
     }, [screenMFRData, mediaPlayerMFRData, mountsData, receptacleBoxData]);
   
     const handleSelectionChange = (field: string, value: string) => {
