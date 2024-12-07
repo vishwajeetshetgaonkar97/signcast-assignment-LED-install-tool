@@ -1,157 +1,175 @@
-import React, { useRef, useState, useLayoutEffect } from 'react';
+import React, { useRef, useEffect, useState, useContext } from 'react';
 import * as fabric from 'fabric';
+import ScreenMFRDataContext from '../../Contexts/ScreenMFRDataContext';
+import SelectedConfigurationContext from '../../Contexts/SelectedConfigurationContext';
 
-interface CanvasSize {
-  width: number;
-  height: number;
-}
+const ScalableRectangleCanvas: React.FC = () => {
+  const { screenMFRData } = useContext(ScreenMFRDataContext);
+  const { selectedConfiguration, setSelectedConfiguration } = useContext(SelectedConfigurationContext);
 
-const FabricCanvas: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const [canvasSize, setCanvasSize] = useState<CanvasSize>({ width: 0, height: 0 });
-
   const fabricCanvasRef = useRef<fabric.Canvas | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
-  const updateCanvasSize = () => {
-    const parentWidth = containerRef.current?.offsetWidth || 0;
-    const parentHeight = (parentWidth * 9) / 16; // Maintaining 16:9 aspect ratio
-    setCanvasSize({ width: parentWidth, height: parentHeight });
+  const [canvasSize, setCanvasSize] = useState({ width: 800, height: 450 });
+  const [rectangles, setRectangles] = useState<fabric.Group[]>([]);
 
-    // Resize fabric canvas dynamically
-    if (fabricCanvasRef.current) {
-      fabricCanvasRef.current.setWidth(parentWidth);
-      fabricCanvasRef.current.setHeight(parentHeight);
-    }
+  const [selectedConfigurationValues, setSelectedConfigurationValues] = useState({
+    mediaPlayerMFR: selectedConfiguration.mediaPlayerMFR || null,
+    mount: selectedConfiguration.mount || null,
+    receptacleBox: selectedConfiguration.receptacleBox || null,
+    screenMFR: selectedConfiguration.screenMFR || null,
+  });
 
-    // Scale the rectangle based on new canvas size
-    scaleRectangle(parentWidth, parentHeight);
+  useEffect(() => {
+    setSelectedConfigurationValues({
+      mediaPlayerMFR: selectedConfiguration.mediaPlayerMFR || null,
+      mount: selectedConfiguration.mount || null,
+      receptacleBox: selectedConfiguration.receptacleBox || null,
+      screenMFR: selectedConfiguration.screenMFR || null,
+    });
+  }, [selectedConfiguration]);
+
+  // Function to create the outer border with text and draggable option
+  const createOutterBorder = (
+    rectX: number, 
+    rectY: number, 
+    rectWidth: number, 
+    rectHeight: number, 
+    strokeColor: string = 'black', 
+    strokeWidth: number = 2,
+    isDotted: boolean = false, 
+    text: string | number = '', 
+    textColor: string = 'black', 
+    isDraggable: boolean = true
+  ): fabric.Group => {
+    const rect = new fabric.Rect({
+      left: rectX,
+      top: rectY,
+      width: rectWidth,
+      height: rectHeight,
+      fill: 'transparent',
+      stroke: strokeColor,
+      strokeWidth: strokeWidth,
+      strokeDashArray: isDotted ? [5, 5] : [],
+    });
+
+    const textObj = new fabric.Text(String(text), { // Convert text to string
+      fontSize: Math.min(rectWidth, rectHeight) * 0.2,
+      fill: textColor,
+      originX: 'center',
+      originY: 'center',
+      left: rectX + rectWidth / 2,
+      top: rectY + rectHeight / 2,
+    });
+    
+    const group = new fabric.Group([rect, textObj], {
+      left: rectX,
+      top: rectY,
+      selectable: true,
+      hasControls: isDraggable,
+      lockMovementX: !isDraggable,
+      lockMovementY: !isDraggable,
+    });
+
+    return group;
   };
 
-  const scaleRectangle = (canvasWidth: number, canvasHeight: number) => {
-    if (fabricCanvasRef.current) {
-      const rect = fabricCanvasRef.current.item(0); // Get the first object (rectangle)
+  // Update canvas size dynamically
+  const updateCanvasSize = () => {
+    if (containerRef.current) {
+      const parentWidth = containerRef.current.offsetWidth;
+      const parentHeight = (parentWidth * 9) / 16; // Maintain 16:9 aspect ratio
+      setCanvasSize({ width: parentWidth, height: parentHeight });
 
-      if (rect) {
-        const rectWidthPercentage = 0.15; // 15% of the canvas width
-        const rectHeightPercentage = 0.1; // 10% of the canvas height
-        const rectPositionXPercentage = 0.1; // 10% of the canvas width from left
-        const rectPositionYPercentage = 0.1; // 10% of the canvas height from top
+      if (fabricCanvasRef.current) {
+        fabricCanvasRef.current.setWidth(parentWidth);
+        fabricCanvasRef.current.setHeight(parentHeight);
 
-        // Update rectangle size and position
-        rect.set({
-          width: canvasWidth * rectWidthPercentage,
-          height: canvasHeight * rectHeightPercentage,
-          left: canvasWidth * rectPositionXPercentage,
-          top: canvasHeight * rectPositionYPercentage,
+        // Rescale the rectangles when the canvas resizes
+        rectangles.forEach((rectangle) => {
+          const rectWidth = parentWidth * 0.3; // 30% of canvas width
+          const rectHeight = parentHeight * 0.2; // 20% of canvas height
+          const rectX = parentWidth * 0.1; // 10% of canvas width
+          const rectY = parentHeight * 0.1; // 10% of canvas height
+
+          const rect = rectangle.item(0) as fabric.Rect;
+          const text = rectangle.item(1) as fabric.Text;
+
+          rect.set({ width: rectWidth, height: rectHeight, left: rectX, top: rectY });
+          text.set({
+            left: rectX + rectWidth / 2,
+            top: rectY + rectHeight / 2,
+            fontSize: Math.min(rectWidth, rectHeight) * 0.2,
+          });
+
+          rectangle.set({ left: rectX, top: rectY });
+
+          fabricCanvasRef.current?.requestRenderAll();
         });
-
-        fabricCanvasRef.current.renderAll(); // Re-render canvas to apply changes
       }
     }
   };
 
-  const createRectangle = (width: number, height: number, left: number, top: number, fillColor?: string, strokeColor?: string, strokeWidth?: number, opacity?: number, isDashed?: boolean, isdraggable?: boolean) => {
-    if (fabricCanvasRef.current) {
-      const rect = new fabric.Rect({
-        left: left,
-        top: top,
-        fill: fillColor || 'transparent',
-        width: width,
-        height: height,
-        stroke: strokeColor || 'black',
-        strokeWidth: strokeWidth || 2,
-        opacity: opacity || 1,
-        isDashed: isDashed || false,
-        isdraggable: isdraggable || false,
-      });
-      fabricCanvasRef.current.add(rect);
-    }
+  const createRectangles = () => {
+    const canvas = fabricCanvasRef.current;
+    if (!canvas) return;
+
+    const { width, height } = canvasSize;
+
+    const rectWidth = width * 0.3; // 30% of canvas width
+    const rectHeight = height * 0.2; // 20% of canvas height
+    const rectX = width * 0.1; // 10% of canvas width
+    const rectY = height * 0.1; // 10% of canvas height
+
+    // Create rectangles with different options
+    const rect1 = createOutterBorder(
+      rectX, rectY, rectWidth, rectHeight, 'blue', 3, false, 'Rectangle 1', 'white', true
+    );
+
+    // For rect2, display the Height of selectedConfigurationValues.screenMFR
+    const rect2Text = selectedConfigurationValues.screenMFR?.Height || 'No Height Data';
+    const rect2 = createOutterBorder(
+      rectX + rectWidth + 20, rectY + 100, rectWidth, rectHeight, 'green', 2, true, rect2Text, 'yellow', false
+    );
+
+    // Add them to the canvas
+    canvas.add(rect1);
+    canvas.add(rect2);
+
+    setRectangles([rect1, rect2]);
   };
 
-  const createRectangleWithText = (
-    width: number,
-    height: number,
-    left: number,
-    top: number,
-    fillColor?: string,
-    strokeColor?: string,
-    strokeWidth?: number,
-    text?: string,
-    textColor?: string
-  ) => {
-    if (fabricCanvasRef.current) {
-      // Create the rectangle
-      const rect = new fabric.Rect({
-        left: left,
-        top: top,
-        fill: fillColor || 'transparent',
-        width: width,
-        height: height,
-        stroke: strokeColor || 'black',
-        strokeWidth: strokeWidth || 2,
-      });
-  
-      // Create the text
-      const textObj = new fabric.Text(text || 'Default Text', {
-        left: left + width / 2,
-        top: top + height / 2,
-        fontSize: 20,
-        fill: textColor || 'black',
-        originX: 'center', // Align text center horizontally
-        originY: 'center', // Align text center vertically
-      });
-  
-      // Group the rectangle and text together
-      const group = new fabric.Group([rect, textObj], {
-        left: left,
-        top: top,
-      });
-  
-      fabricCanvasRef.current.add(group);
-    }
-  };
-
-  
-  useLayoutEffect(() => {
+  useEffect(() => {
+    // Initialize Fabric.js canvas
     if (canvasRef.current && !fabricCanvasRef.current) {
-      const canvas = new fabric.Canvas(canvasRef.current);
-      fabricCanvasRef.current = canvas;
-
-      createRectangle(150, 100, 100, 100);
-      createRectangleWithText(150, 100, 100, 100);
+      fabricCanvasRef.current = new fabric.Canvas(canvasRef.current);
+      createRectangles();
     }
 
+    // Handle resizing
     updateCanvasSize();
-
     window.addEventListener('resize', updateCanvasSize);
-    const resizeObserver = new ResizeObserver(updateCanvasSize);
-    if (containerRef.current) {
-      resizeObserver.observe(containerRef.current);
-    }
 
     return () => {
       window.removeEventListener('resize', updateCanvasSize);
-      if (containerRef.current) {
-        resizeObserver.disconnect();
-      }
       if (fabricCanvasRef.current) {
         fabricCanvasRef.current.dispose();
         fabricCanvasRef.current = null;
       }
     };
-  }, []);
+  }, [canvasSize, selectedConfigurationValues]);
 
   return (
-    <div ref={containerRef} className="w-[82%] h-full">
+    <div ref={containerRef} style={{ width: '100%', height: 'auto' }}>
       <canvas
         ref={canvasRef}
         width={canvasSize.width}
         height={canvasSize.height}
-        className="w-full h-full border border-border-color aspect-video"
-      ></canvas>
+        style={{ border: '1px solid black', width: '100%' }}
+      />
     </div>
   );
 };
 
-export default FabricCanvas;
+export default ScalableRectangleCanvas;

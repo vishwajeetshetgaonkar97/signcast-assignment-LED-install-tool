@@ -32,7 +32,7 @@ const DescriptionConfigComponent = () => {
   console.log(descriptionConfiguration);
   return (
     <form className="h-max px-4 py-3 space-y-0 border border-border-color">
-        <h4 className="font-semibold text-sm pb-1 opacity-80 ">Description</h4>
+        <h4 className="font-semibold text-sm pb-2 opacity-80 ">Description</h4>
       <div className="pb-2">
       <label
             htmlFor="title"
