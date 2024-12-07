@@ -2,19 +2,28 @@ import React, { useRef, useEffect, useState, useContext } from 'react';
 import * as fabric from 'fabric';
 import ScreenMFRDataContext from '../../Contexts/ScreenMFRDataContext';
 import SelectedConfigurationContext from '../../Contexts/SelectedConfigurationContext';
+import AdditionalConfigurationContext from '../../Contexts/AdditionalConfigurationContext';
 
-const ScalableRectangleCanvas: React.FC = () => {
+const FabricCanvas: React.FC = () => {
   const { screenMFRData } = useContext(ScreenMFRDataContext);
   const { selectedConfiguration, setSelectedConfiguration } = useContext(SelectedConfigurationContext);
+  const { additionalConfiguration, setAdditionalConfiguration } = useContext(AdditionalConfigurationContext);
 
-  const borderColor = "rgba(245, 245, 245)";
+
+  const borderColor = "rgba(0, 0, 0, 0.3)";
+  const headingTextColor = "rgba(0, 0, 0, 0.8)";
+  const textColor = "rgba(0, 0, 0,0.9)";
+  const fillColor = "rgba(0, 0, 0, 0.4)";
+  const cardBorderColor = "rgba(0, 0, 0, 0.5)";
+  const cardTextColor = "rgba(255, 255, 255,0.8)";
+  const highlightFillColor = "rgba(255, 255, 255, 0.5)";
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const fabricCanvasRef = useRef<fabric.Canvas | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   const [canvasSize, setCanvasSize] = useState({ width: 800, height: 450 });
-  const [rectangles, setRectangles] = useState<fabric.Group[]>([]);
+  const [screenDimensionBox, setScreenDimensionBox] = useState<fabric.Group[]>([]);
 
   const [selectedConfigurationValues, setSelectedConfigurationValues] = useState({
     mediaPlayerMFR: selectedConfiguration.mediaPlayerMFR || null,
@@ -45,6 +54,9 @@ const ScalableRectangleCanvas: React.FC = () => {
     textColor?: string;
     isDraggable?: boolean;
     fontWeight?: string | number;
+    scaleFactor?: number;
+    textOriginX?: string;
+    fillColor?: string;
   }
 
   // Function to create the outer border with text and draggable option
@@ -54,35 +66,41 @@ const ScalableRectangleCanvas: React.FC = () => {
     rectWidth,
     rectHeight,
     strokeColor = 'transparent',
+    fillColor = 'transparent',
     strokeWidth = 2,
     isDotted = false,
     text = '',
     textColor = 'transparent',
     isDraggable = true,
     fontWeight = 'normal',
+    scaleFactor = 1,
   }: RectangleOptions): fabric.Group => {
-    
+
     const rect = new fabric.Rect({
       left: rectX,
       top: rectY,
       width: rectWidth,
       height: rectHeight,
-      fill: 'transparent',
+      fill: fillColor,
       stroke: strokeColor,
       strokeWidth: strokeWidth,
       strokeDashArray: isDotted ? [5, 5] : [],
     });
 
-    const textObj = new fabric.Text(String(text), { // Convert text to string
+    const textObj = new fabric.Text(String(text), {
       fontSize: Math.min(rectWidth, rectHeight) * 0.2,
       fill: textColor,
-      originX: 'center',
+      originX: "center",
       originY: 'center',
       left: rectX + rectWidth / 2,
       top: rectY + rectHeight / 2,
-      fontWeight: fontWeight
+      fontWeight: fontWeight,
+      scaleX: scaleFactor,
+      scaleY: scaleFactor,
+      fontFamily: 'Poppins',
+
     });
-    
+
     const group = new fabric.Group([rect, textObj], {
       left: rectX,
       top: rectY,
@@ -106,15 +124,14 @@ const ScalableRectangleCanvas: React.FC = () => {
         fabricCanvasRef.current.setWidth(parentWidth);
         fabricCanvasRef.current.setHeight(parentHeight);
 
-        // Rescale the rectangles when the canvas resizes
-        rectangles.forEach((rectangle) => {
-          const rectWidth = parentWidth * 0.3; // 30% of canvas width
-          const rectHeight = parentHeight * 0.2; // 20% of canvas height
-          const rectX = parentWidth * 0.1; // 10% of canvas width
-          const rectY = parentHeight * 0.1; // 10% of canvas height
+        screenDimensionBox.forEach((element) => {
+          const rectWidth = parentWidth * 0.3;
+          const rectHeight = parentHeight * 0.2;
+          const rectX = parentWidth * 0.1;
+          const rectY = parentHeight * 0.1;
 
-          const rect = rectangle.item(0) as fabric.Rect;
-          const text = rectangle.item(1) as fabric.Text;
+          const rect = element.item(0) as fabric.Rect;
+          const text = element.item(1) as fabric.Text;
 
           rect.set({ width: rectWidth, height: rectHeight, left: rectX, top: rectY });
           text.set({
@@ -123,7 +140,7 @@ const ScalableRectangleCanvas: React.FC = () => {
             fontSize: Math.min(rectWidth, rectHeight) * 0.2,
           });
 
-          rectangle.set({ left: rectX, top: rectY });
+          element.set({ left: rectX, top: rectY });
 
           fabricCanvasRef.current?.requestRenderAll();
         });
@@ -137,51 +154,141 @@ const ScalableRectangleCanvas: React.FC = () => {
 
     const { width, height } = canvasSize;
 
-    const rectWidth = width * 0.2; // 30% of canvas width
-    const rectHeight = height * 0.2; // 20% of canvas height
-    const rectX = width * 0.78; // 10% of canvas width
-    const rectY = height * 0.03; // 10% of canvas height
+    const rectWidth = width * 0.2;
+    const rectHeight = height * 0.24;
+    const rectX = width * 0.78;
+    const rectY = height * 0.03;
 
-    // Create rectangles with different options
-    const rect1 = createDynamicRectangle({
+    const outerBorder = createDynamicRectangle({
       rectX,
       rectY,
       rectWidth,
       rectHeight,
       strokeColor: borderColor,
       strokeWidth: 1,
-      isDotted: false,
-      text: ' ',
-      textColor: 'black',
-      isDraggable: true,
     });
 
-    // For rect2, display the Height of selectedConfigurationValues.screenMFR
-    const rect2Text = selectedConfigurationValues.screenMFR?.Height || '0';
-    const rect2 = createDynamicRectangle({
-      rectX: rectX + rectWidth + 20,
-      rectY: rectY + 100,
-      rectWidth,
-      rectHeight,
-      strokeColor: 'green',
-      strokeWidth: 2,
-      isDotted: true,
-      text: rect2Text,
-      textColor: 'yellow',
-      isDraggable: false,
+    const headingText = 'Screen Dimensions:';
+    const headingTextContainer = createDynamicRectangle({
+      rectX,
+      rectY: rectY * 1.2,
+      rectWidth: rectWidth * 0.74,
+      rectHeight: height * 0.06,
+      text: headingText,
+      textColor: headingTextColor,
+      scaleFactor: 1.95,
+      fontWeight: '600'
     });
 
-    // Add them to the canvas
-    canvas.add(rect1);
-    canvas.add(rect2);
+    const screenHeightText = 'Height';
+    const screenHeightTextContainer = createDynamicRectangle({
+      rectX: rectX * 1.01,
+      rectY: rectY * 3.2,
+      rectWidth: rectWidth * 0.45,
+      rectHeight: height * 0.04,
+      strokeColor: cardBorderColor,
+      fillColor: fillColor,
+      strokeWidth: 1,
+      text: screenHeightText,
+      textColor: cardTextColor,
+      scaleFactor: 1.9,
+      fontWeight: 'normal'
+    });
 
-    setRectangles([rect1, rect2]);
+    const screenHeightValue = selectedConfigurationValues.screenMFR ? selectedConfigurationValues.screenMFR.Height : '0';
+    const screenHeightValueContainer = createDynamicRectangle({
+      rectX: rectX * 1.126,
+      rectY: rectY * 3.2,
+      rectWidth: rectWidth * 0.45,
+      rectHeight: height * 0.04,
+      strokeColor: cardBorderColor,
+      strokeWidth: 1,
+      text: screenHeightValue,
+      textColor: textColor,
+      scaleFactor: 1.9,
+      fontWeight: 'normal'
+    });
+
+
+    const screenWidthText = 'Width';
+    const screenWidthTextContainer = createDynamicRectangle({
+      rectX: rectX * 1.01,
+      rectY: rectY * 5,
+      rectWidth: rectWidth * 0.45,
+      rectHeight: height * 0.04,
+      strokeColor: cardBorderColor,
+      fillColor: fillColor,
+      strokeWidth: 1,
+      text: screenWidthText,
+      textColor: cardTextColor,
+      scaleFactor: 1.9,
+      fontWeight: 'normal'
+    });
+
+    const screenWidthValue = selectedConfigurationValues.screenMFR ? selectedConfigurationValues.screenMFR.Width : '0';
+    const screenWidthValueContainer = createDynamicRectangle({
+      rectX: rectX * 1.126,
+      rectY: rectY * 5,
+      rectWidth: rectWidth * 0.45,
+      rectHeight: height * 0.04,
+      strokeColor: cardBorderColor,
+      strokeWidth: 1,
+      text: screenWidthValue,
+      textColor: textColor,
+      scaleFactor: 1.9,
+      fontWeight: 'normal'
+    });
+
+    const floorLineText = 'Floor Line';
+    const floorLineTextContainer = createDynamicRectangle({
+      rectX: rectX * 1.01,
+      rectY: rectY * 6.8,
+      rectWidth: rectWidth * 0.45,
+      rectHeight: height * 0.04,
+      strokeColor: cardBorderColor,
+      fillColor: fillColor,
+      strokeWidth: 1,
+      text: floorLineText,
+      textColor: cardTextColor,
+      scaleFactor: 1.9,
+      fontWeight: 'normal'
+    });
+
+    const floorLineValue = additionalConfiguration.distanceFromFloor ? additionalConfiguration.distanceFromFloor : '0';
+    const floorLineValueContainer = createDynamicRectangle({
+      rectX: rectX * 1.126,
+      rectY: rectY * 6.8,
+      rectWidth: rectWidth * 0.45,
+      rectHeight: height * 0.04,
+      strokeColor: cardBorderColor,
+      strokeWidth: 1,
+      text: floorLineValue,
+      textColor: textColor,
+      scaleFactor: 1.9,
+      fontWeight: 'normal'
+    });
+
+
+    canvas.add(outerBorder);
+    canvas.add(headingTextContainer);
+    canvas.add(screenHeightTextContainer);
+    canvas.add(screenHeightValueContainer);
+    canvas.add(screenWidthTextContainer);
+    canvas.add(screenWidthValueContainer);
+    canvas.add(floorLineTextContainer);
+    canvas.add(floorLineValueContainer);
+
+    setScreenDimensionBox([outerBorder, headingTextContainer, screenHeightTextContainer]);
   };
 
   useEffect(() => {
     // Initialize Fabric.js canvas
     if (canvasRef.current && !fabricCanvasRef.current) {
       fabricCanvasRef.current = new fabric.Canvas(canvasRef.current);
+
+      // Set Poppins as the default font for all Fabric.js text elements
+      fabric.Text.prototype.fontFamily = 'Poppins';
+
       createScreenDimensionBox();
     }
 
@@ -196,7 +303,7 @@ const ScalableRectangleCanvas: React.FC = () => {
         fabricCanvasRef.current = null;
       }
     };
-  }, [canvasSize, selectedConfigurationValues]);
+  }, [canvasSize]);
 
   return (
     <div ref={containerRef} className='h-full w-full'>
@@ -210,4 +317,4 @@ const ScalableRectangleCanvas: React.FC = () => {
   );
 };
 
-export default ScalableRectangleCanvas;
+export default FabricCanvas;
