@@ -16,7 +16,10 @@ export type ReceptacleBox = {
 
 export type AdditionalConfiguration = {
   orientation: "vertical" | "horizontal";
-  nicheType: "flat wall" | "other";
+  nicheType: "flat wall" | "niche";
   distanceFromFloor: number;
   nicheDepth: number;
+  rBoxHeight: number;
+  rBoxWidth: number;
+  rBoxDepth: number;
 };

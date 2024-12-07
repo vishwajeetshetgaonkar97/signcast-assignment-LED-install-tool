@@ -12,7 +12,7 @@ export default {
         "border-color": "rgb(var(--border))",
         "card-color": "rgb(var(--card))",
         "card-text-color": "rgb(var(--card-text))",
-        
+       "section-color": "rgb(var(--section))",
       },
     },
   },

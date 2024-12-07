@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import FabricCanvas from "../FabricCanvas/FabricCanvas";
-import ConfigurationComponent from "../ConfigurationComponent/ConfigurationComponent";
+import ConfigurationSectionComponent from "../ConfigurationSectionComponent/ConfigurationSectionComponent";
 import { fetchGoogleSheetData } from "./../../api/fetchGoogleSheetData";
 import {
   ScreenMFR,
@@ -34,6 +34,9 @@ const DrawingToolComponent = () => {
     nicheType: "flat wall", 
     distanceFromFloor: 0, 
     nicheDepth: 0, 
+    rBoxHeight: 6.6,
+    rBoxWidth: 6.012,
+    rBoxDepth: 3.75,
   });
 
 
@@ -97,7 +100,7 @@ const DrawingToolComponent = () => {
 
                 <div className="flex h-full pb-2 align-center justify-center w-full gap-4">
                   <FabricCanvas />
-                  <ConfigurationComponent />
+                  <ConfigurationSectionComponent />
                 </div>
                 
                 </AdditionalConfigurationContext.Provider>
