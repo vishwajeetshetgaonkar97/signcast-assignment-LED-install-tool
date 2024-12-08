@@ -174,14 +174,14 @@ const ConfigurationComponent = () => {
       <div className="flex align-center gap-0 pt-1">
         <button
           type="button"
-          className={`w-full text-xs py-2 ${additionalConfig.orientation === "vertical" ? "bg-blue-700 text-blue-50" : "text-text-color border border-border-color"} focus:outline-none hover:bg-card-color `}
+          className={`w-full text-xs py-2 ${additionalConfig.orientation === "vertical" ? "bg-orange-600 bg-opacity-90 text-blue-50" : "text-text-color border border-border-color"} focus:outline-none hover:bg-card-color `}
           onClick={() => handleAdditionalConfigChange("orientation", "vertical")}
         >
           Vertical
         </button>
         <button
           type="button"
-          className={`w-full text-xs py-2 ${additionalConfig.orientation === "horizontal" ? "bg-blue-700 text-blue-50" : "text-text-color border border-border-color"} focus:outline-none hover:bg-card-color`}
+          className={`w-full text-xs py-2 ${additionalConfig.orientation === "horizontal" ? "bg-orange-600 bg-opacity-90 text-blue-50" : "text-text-color border border-border-color"} focus:outline-none hover:bg-card-color`}
           onClick={() => handleAdditionalConfigChange("orientation", "horizontal")}
         >
           Horizontal
@@ -192,14 +192,14 @@ const ConfigurationComponent = () => {
       <div className="flex align-center gap-0 pt-1">
         <button
           type="button"
-          className={`w-full py-2  text-xs ${additionalConfig.nicheType === "niche" ? "bg-blue-700 text-blue-50" : "text-text-color border border-border-color"} focus:outline-none hover:bg-card-color`}
+          className={`w-full py-2  text-xs ${additionalConfig.nicheType === "niche" ? "bg-orange-600 bg-opacity-90 text-blue-50" : "text-text-color border border-border-color"} focus:outline-none hover:bg-card-color`}
           onClick={() => handleAdditionalConfigChange("nicheType", "niche")}
         >
           Niche
         </button>
         <button
           type="button"
-          className={`w-full py-2 text-xs  ${additionalConfig.nicheType === "flat wall" ? "bg-blue-700 text-blue-50" : "text-text-color border border-border-color"} focus:outline-none hover:bg-card-color`}
+          className={`w-full py-2 text-xs  ${additionalConfig.nicheType === "flat wall" ? "bg-orange-600 bg-opacity-90 text-blue-50" : "text-text-color border border-border-color"} focus:outline-none hover:bg-card-color`}
           onClick={() => handleAdditionalConfigChange("nicheType", "flat wall")}
         >
           Flat Wall
