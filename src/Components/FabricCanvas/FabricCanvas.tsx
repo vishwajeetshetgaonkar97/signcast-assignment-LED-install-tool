@@ -24,7 +24,6 @@ const { descriptionConfiguration } = useContext(DescripotionDataContext);
   const fabricCanvasRef = useRef<fabric.Canvas | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
-  const [canvasSize, setCanvasSize] = useState({ width: 800, height: 450 });
   const [screenDimensionBox, setScreenDimensionBox] = useState<fabric.Group[]>([]);
   const [nicheDimensionBox, setNicheDimensionBox] = useState<fabric.Group[]>([]);
   const [descriptionBox, setDescriptionBox] = useState<fabric.Group[]>([]);
@@ -195,101 +194,30 @@ const { descriptionConfiguration } = useContext(DescripotionDataContext);
 
   // Update canvas size dynamically
   const updateCanvasSize = () => {
-    if (containerRef.current) {
-      const parentWidth = containerRef.current.offsetWidth;
-      const parentHeight = (parentWidth * 9) / 16; // Maintain 16:9 aspect ratio
-      setCanvasSize({ width: parentWidth, height: parentHeight });
+    if (containerRef.current && fabricCanvasRef.current) {
 
-      if (fabricCanvasRef.current) {
-        fabricCanvasRef.current.setWidth(parentWidth);
-        fabricCanvasRef.current.setHeight(parentHeight);
+      const containerWidth = containerRef.current.offsetWidth;
+      const newHeight = (containerWidth * 9) / 16;
 
-        screenDimensionBox.forEach((element) => {
-          const rectWidth = parentWidth * 0.3;
-          const rectHeight = parentHeight * 0.2;
-          const rectX = parentWidth * 0.1;
-          const rectY = parentHeight * 0.1;
+      const canvas = fabricCanvasRef.current;
 
-          const rect = element.item(0) as fabric.Rect;
-          const text = element.item(1) as fabric.Text;
+      const prevWidth = canvas.width || 1;
+      const prevHeight = canvas.height || 1;
 
-          rect.set({ width: rectWidth, height: rectHeight, left: rectX, top: rectY });
-          text.set({
-            left: rectX + rectWidth / 2,
-            top: rectY + rectHeight / 2,
-            fontSize: Math.min(rectWidth, rectHeight) * 0.2,
-          });
+      canvas.setWidth(containerWidth);
+      canvas.setHeight(newHeight);
 
-          element.set({ left: rectX, top: rectY });
+      const scaleX = containerWidth / prevWidth;
+      const scaleY = newHeight / prevHeight;
 
-          fabricCanvasRef.current?.requestRenderAll();
-        });
+  canvas.getObjects().forEach((obj) => {
+        obj.scaleX = (obj.scaleX || 1) * scaleX;
+        obj.scaleY = (obj.scaleY || 1) * scaleY;
+        obj.left = (obj.left || 0) * scaleX;
+        obj.top = (obj.top || 0) * scaleY;
+        obj.setCoords();
+      });
 
-        nicheDimensionBox.forEach((element) => {
-          const rectWidth = parentWidth * 0.3;
-          const rectHeight = parentHeight * 0.2;
-          const rectX = parentWidth * 0.1;
-          const rectY = parentHeight * 0.1;
-
-          const rect = element.item(0) as fabric.Rect;
-          const text = element.item(1) as fabric.Text;
-
-          rect.set({ width: rectWidth, height: rectHeight, left: rectX, top: rectY });
-          text.set({
-            left: rectX + rectWidth / 2,
-            top: rectY + rectHeight / 2,
-            fontSize: Math.min(rectWidth, rectHeight) * 0.2,
-          });
-
-          element.set({ left: rectX, top: rectY });
-
-          fabricCanvasRef.current?.requestRenderAll();
-        });
-
-
-        descriptionBox.forEach((element) => {
-          const rectWidth = parentWidth * 0.3;
-          const rectHeight = parentHeight * 0.2;
-          const rectX = parentWidth * 0.1;
-          const rectY = parentHeight * 0.1;
-
-          const rect = element.item(0) as fabric.Rect;
-          const text = element.item(1) as fabric.Text;
-
-          rect.set({ width: rectWidth, height: rectHeight, left: rectX, top: rectY });
-          text.set({
-            left: rectX + rectWidth / 2,
-            top: rectY + rectHeight / 2,
-            fontSize: Math.min(rectWidth, rectHeight) * 0.2,
-          });
-
-          element.set({ left: rectX, top: rectY });
-
-          fabricCanvasRef.current?.requestRenderAll();
-        });
-
-        notesBox.forEach((element) => {
-          const rectWidth = parentWidth * 0.3;
-          const rectHeight = parentHeight * 0.2;
-          const rectX = parentWidth * 0.1;
-          const rectY = parentHeight * 0.1; 
-
-          const rect = element.item(0) as fabric.Rect;
-          const text = element.item(1) as fabric.Text;
-
-          rect.set({ width: rectWidth, height: rectHeight, left: rectX, top: rectY });
-          text.set({
-            left: rectX + rectWidth / 2,
-            top: rectY + rectHeight / 2,
-            fontSize: Math.min(rectWidth, rectHeight) * 0.2,
-          });
-
-          element.set({ left: rectX, top: rectY });
-
-          fabricCanvasRef.current?.requestRenderAll();
-        })
-
-      }
     }
   };
 
@@ -297,9 +225,8 @@ const { descriptionConfiguration } = useContext(DescripotionDataContext);
   const createNicheDimensionBox = () => {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
-
-    const { width, height } = canvasSize;
-
+    const width = canvas.getWidth(); 
+    const height = canvas.getHeight();
     const rectWidth = width * 0.19;
     const rectHeight = height * 0.24;
     const rectX = width * 0.595;
@@ -430,7 +357,8 @@ const { descriptionConfiguration } = useContext(DescripotionDataContext);
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
 
-    const { width, height } = canvasSize;
+    const width = canvas.getWidth(); 
+    const height = canvas.getHeight();
 
     const rectWidth = width * 0.19;
     const rectHeight = height * 0.24;
@@ -560,7 +488,8 @@ const { descriptionConfiguration } = useContext(DescripotionDataContext);
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
 
-    const { width, height } = canvasSize;
+    const width = canvas.getWidth(); 
+    const height = canvas.getHeight();
 
     const rectWidth = width * 0.39;
     const rectHeight = height * 0.2;
@@ -741,7 +670,8 @@ const { descriptionConfiguration } = useContext(DescripotionDataContext);
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
 
-    const { width, height } = canvasSize;
+    const width = canvas.getWidth(); 
+    const height = canvas.getHeight();
 
     const rectWidth = width * 0.39;
     const rectHeight = height * 0.28 ;
@@ -1038,27 +968,47 @@ const { descriptionConfiguration } = useContext(DescripotionDataContext);
     setDescriptionBox([outerBorder, addressTextContainer]);
   };
 
-
-
-
   useEffect(() => {
-    // Initialize Fabric.js canvas
     if (canvasRef.current && !fabricCanvasRef.current) {
-      fabricCanvasRef.current = new fabric.Canvas(canvasRef.current);
-
+      // Initialize Fabric.js canvas
+      fabricCanvasRef.current = new fabric.Canvas(canvasRef.current, {
+        preserveObjectStacking: true,
+        selection: true,
+        backgroundColor: 'lightblue',
+      });
+  
       // Set Poppins as the default font for all Fabric.js text elements
       fabric.Text.prototype.fontFamily = 'Poppins';
-
+  
+      // Create the dimension boxes and example objects
       createScreenDimensionBox();
       createNicheDimensionBox();
       createDescriptionBox();
       createNotesBox();
+  
+      // Add example objects
+      const rect = new fabric.Rect({
+        left: 100,
+        top: 100,
+        width: 200,
+        height: 100,
+        fill: 'red',
+      });
+      fabricCanvasRef.current.add(rect);
+  
+      const circle = new fabric.Circle({
+        left: 400,
+        top: 200,
+        radius: 50,
+        fill: 'blue',
+      });
+      fabricCanvasRef.current.add(circle);
     }
-
+  
     // Handle resizing
     updateCanvasSize();
     window.addEventListener('resize', updateCanvasSize);
-
+  
     return () => {
       window.removeEventListener('resize', updateCanvasSize);
       if (fabricCanvasRef.current) {
@@ -1066,15 +1016,20 @@ const { descriptionConfiguration } = useContext(DescripotionDataContext);
         fabricCanvasRef.current = null;
       }
     };
-  }, [canvasSize]);
-
+  }, []);
+  
 
   return (
-    <div ref={containerRef} className='h-full w-full'>
+    <div ref={containerRef} className='h-full w-full'   
+    style={{
+      width: '100%',
+      height: 'auto',
+      position: 'relative',
+      backgroundColor: '#f0f0f0',
+      aspectRatio: '16 / 9',
+    }}>
       <canvas
         ref={canvasRef}
-        width={canvasSize.width}
-        height={canvasSize.height}
         className='border border-border-color h-full w-full'
       />
     </div>
@@ -1082,3 +1037,5 @@ const { descriptionConfiguration } = useContext(DescripotionDataContext);
 };
 
 export default FabricCanvas;
+
+
