@@ -3,13 +3,13 @@ import * as fabric from 'fabric';
 import ScreenMFRDataContext from '../../Contexts/ScreenMFRDataContext';
 import SelectedConfigurationContext from '../../Contexts/SelectedConfigurationContext';
 import AdditionalConfigurationContext from '../../Contexts/AdditionalConfigurationContext';
-import {getDate, getDepartmentText, getDescriptionContainerTitle, getDrawerName, getScreenSizeText} from '../../utils/CanvasUtils'
+import {getDate, getDepartmentText, getDescriptionContainerTitle, getDrawerName, getRBoxDepth, getRBoxHeight, getRBoxWidth, getScreenSizeText} from '../../utils/CanvasUtils'
 import DescripotionDataContext from '../../Contexts/DescripotionDataContext';
 
 const FabricCanvas: React.FC = () => {
   const { screenMFRData } = useContext(ScreenMFRDataContext);
-  const { selectedConfiguration, setSelectedConfiguration } = useContext(SelectedConfigurationContext);
-  const { additionalConfiguration, setAdditionalConfiguration } = useContext(AdditionalConfigurationContext);
+  const { selectedConfiguration} = useContext(SelectedConfigurationContext);
+  const { additionalConfiguration} = useContext(AdditionalConfigurationContext);
 const { descriptionConfiguration } = useContext(DescripotionDataContext);
 
   const borderColor = "rgba(0, 0, 0, 0.6)";
@@ -18,7 +18,7 @@ const { descriptionConfiguration } = useContext(DescripotionDataContext);
   const fillColor = "rgba(0, 0, 0, 0.4)";
   const cardBorderColor = "rgba(0, 0, 0, 0.5)";
   const cardTextColor = "rgba(255, 255, 255,0.8)";
-  const highlightFillColor = "rgba(255, 125, 25, 0.4)";
+  const highlightFillColor = "rgba(248, 230, 186, 1)";
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const fabricCanvasRef = useRef<fabric.Canvas | null>(null);
@@ -28,6 +28,7 @@ const { descriptionConfiguration } = useContext(DescripotionDataContext);
   const [screenDimensionBox, setScreenDimensionBox] = useState<fabric.Group[]>([]);
   const [nicheDimensionBox, setNicheDimensionBox] = useState<fabric.Group[]>([]);
   const [descriptionBox, setDescriptionBox] = useState<fabric.Group[]>([]);
+  const [notesBox, setNotesBox] = useState<fabric.Group[]>([]);
 
   const [selectedConfigurationValues, setSelectedConfigurationValues] = useState({
     mediaPlayerMFR: selectedConfiguration.mediaPlayerMFR || null,
@@ -266,6 +267,27 @@ const { descriptionConfiguration } = useContext(DescripotionDataContext);
 
           fabricCanvasRef.current?.requestRenderAll();
         });
+
+        notesBox.forEach((element) => {
+          const rectWidth = parentWidth * 0.3;
+          const rectHeight = parentHeight * 0.2;
+          const rectX = parentWidth * 0.1;
+          const rectY = parentHeight * 0.1; 
+
+          const rect = element.item(0) as fabric.Rect;
+          const text = element.item(1) as fabric.Text;
+
+          rect.set({ width: rectWidth, height: rectHeight, left: rectX, top: rectY });
+          text.set({
+            left: rectX + rectWidth / 2,
+            top: rectY + rectHeight / 2,
+            fontSize: Math.min(rectWidth, rectHeight) * 0.2,
+          });
+
+          element.set({ left: rectX, top: rectY });
+
+          fabricCanvasRef.current?.requestRenderAll();
+        })
 
       }
     }
@@ -534,6 +556,186 @@ const { descriptionConfiguration } = useContext(DescripotionDataContext);
     setScreenDimensionBox([outerBorder, headingTextContainer, screenHeightTextContainer]);
   };
 
+  const createNotesBox = () => {
+    const canvas = fabricCanvasRef.current;
+    if (!canvas) return;
+
+    const { width, height } = canvasSize;
+
+    const rectWidth = width * 0.39;
+    const rectHeight = height * 0.2;
+    const rectX = width * 0.595;
+    const rectY = height * 0.47;
+
+    const outerBorder = createDynamicRectangle({
+      rectX,
+      rectY,
+      rectWidth,
+      rectHeight,
+      strokeColor: borderColor,
+      strokeWidth: 1,
+    });
+
+    const headingText = 'Notes';
+    const headingTextContainer = createDynamicRectangle({
+      rectX: rectX * 1.016,
+      rectY: rectY * 1.02,
+      rectWidth: rectWidth * 0.1,
+      rectHeight: height * 0.06,
+      text: headingText,
+      textColor: headingTextColor,
+      scaleFactor: 1.95,
+      fontWeight: '600',
+      textOriginX: 'right',
+    });
+
+    const subTextScaleFactor = 1.4;
+
+    const subText = 'Install recessed receptacle box with:';
+    const subTextContainer = createDynamicRectangle({
+      rectX: rectX * 1.016,
+      rectY: rectY * 1.095,
+      rectWidth: rectWidth * 0.1,
+      rectHeight: height * 0.06,
+      text: subText,
+      textColor: textColor,
+      scaleFactor: subTextScaleFactor,
+      fontWeight: '300',
+      textOriginX: 'right',
+    });
+
+    const subText2 = '2x Terminated Power Outlets';
+    const subText2Container = createDynamicRectangle({
+      rectX: rectX * 1.016,
+      rectY: rectY * 1.155,
+      rectWidth: rectWidth * 0.1,
+      rectHeight: height * 0.06,
+      text: subText2,
+      textColor: textColor,
+      scaleFactor: subTextScaleFactor,
+      fontWeight: '300',
+      textOriginX: 'right',
+    });
+
+    const subText3 = '1x Terminated Data CAT5 Ethernet Outlet';
+    const subText3Container = createDynamicRectangle({
+      rectX: rectX * 1.016,
+      rectY: rectY * 1.21,
+      rectWidth: rectWidth * 0.1,
+      rectHeight: height * 0.06,
+      text: subText3,
+      textColor: textColor,
+      scaleFactor: subTextScaleFactor,
+      fontWeight: '300',
+      textOriginX: 'right',
+    });
+
+
+    const firstRowPositionX = rectX * 1.355;
+    const SecondRowPositionX = rectX * 1.499;
+
+    const firstColumnPositionY = rectY * 1.06;
+    const secondColumnPositionY = rectY * 1.175;
+    const thirdColumnPositionY = rectY * 1.29;
+
+    const boxWidth = rectWidth * 0.218;
+    const boxHeight = height * 0.04;
+
+    const screenHeightTextContainer = createDynamicRectangle({
+      rectX: firstRowPositionX,
+      rectY: firstColumnPositionY,
+      rectWidth: boxWidth,
+      rectHeight: boxHeight,
+      strokeColor: cardBorderColor,
+      fillColor: fillColor,
+      strokeWidth: 1,
+      text: "Height",
+      textColor: cardTextColor,
+      scaleFactor: 1.9,
+    });
+
+   
+    const screenHeightValueContainer = createDynamicRectangle({
+      rectX: SecondRowPositionX,
+      rectY: firstColumnPositionY,
+      rectWidth: boxWidth,
+      rectHeight: boxHeight,
+      strokeColor: cardBorderColor,
+      strokeWidth: 1,
+      text: getRBoxHeight(additionalConfiguration),
+      textColor: textColor,
+      scaleFactor: 1.9,
+    });
+
+
+    const screenWidthTextContainer = createDynamicRectangle({
+      rectX: firstRowPositionX,
+      rectY: secondColumnPositionY,
+      rectWidth: boxWidth,
+      rectHeight: boxHeight,
+      strokeColor: cardBorderColor,
+      fillColor: fillColor,
+      strokeWidth: 1,
+      text: "Width",
+      textColor: cardTextColor,
+      scaleFactor: 1.9,
+    });
+
+    const screenWidthValueContainer = createDynamicRectangle({
+      rectX: SecondRowPositionX,
+      rectY: secondColumnPositionY,
+      rectWidth: boxWidth,
+      rectHeight: boxHeight,
+      strokeColor: cardBorderColor,
+      strokeWidth: 1,
+      text: getRBoxWidth(additionalConfiguration),
+      textColor: textColor,
+      scaleFactor: 1.9,
+    });
+
+    const screenDepthTextContainer = createDynamicRectangle({
+      rectX: firstRowPositionX,
+      rectY: thirdColumnPositionY,
+      rectWidth: boxWidth,
+      rectHeight: boxHeight,
+      strokeColor: cardBorderColor,
+      fillColor: fillColor,
+      strokeWidth: 1,
+      text: "Depth",
+      textColor: cardTextColor,
+      scaleFactor: 1.9,
+    });
+
+    const screenDepthValueContainer = createDynamicRectangle({
+      rectX: SecondRowPositionX,
+      rectY: thirdColumnPositionY,
+      rectWidth: boxWidth,
+      rectHeight: boxHeight,
+      strokeColor: cardBorderColor,
+      strokeWidth: 1,
+      text: getRBoxDepth(additionalConfiguration),
+      textColor: textColor,
+      scaleFactor: 1.9,
+    });
+
+
+
+
+
+    canvas.add(outerBorder);
+    canvas.add(headingTextContainer);
+    canvas.add(screenHeightTextContainer);
+    canvas.add(screenHeightValueContainer);
+    canvas.add(screenWidthTextContainer);
+    canvas.add(screenWidthValueContainer);
+    canvas.add(screenDepthTextContainer);
+    canvas.add(screenDepthValueContainer);
+    canvas.add(subTextContainer);
+    canvas.add(subText2Container);
+    canvas.add(subText3Container);
+
+    setScreenDimensionBox([outerBorder, headingTextContainer, screenHeightTextContainer]);
+  };
 
   const createDescriptionBox = () => {
     const canvas = fabricCanvasRef.current;
@@ -833,7 +1035,7 @@ const { descriptionConfiguration } = useContext(DescripotionDataContext);
     canvas.add(departmentTextContainer);
     canvas.add(departmentContainer);
 
-    setScreenDimensionBox([outerBorder, addressTextContainer]);
+    setDescriptionBox([outerBorder, addressTextContainer]);
   };
 
 
@@ -850,6 +1052,7 @@ const { descriptionConfiguration } = useContext(DescripotionDataContext);
       createScreenDimensionBox();
       createNicheDimensionBox();
       createDescriptionBox();
+      createNotesBox();
     }
 
     // Handle resizing
