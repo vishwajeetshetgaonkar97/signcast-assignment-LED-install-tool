@@ -3,12 +3,14 @@ import * as fabric from 'fabric';
 import ScreenMFRDataContext from '../../Contexts/ScreenMFRDataContext';
 import SelectedConfigurationContext from '../../Contexts/SelectedConfigurationContext';
 import AdditionalConfigurationContext from '../../Contexts/AdditionalConfigurationContext';
+import {getDate, getDepartmentText, getDescriptionContainerTitle, getDrawerName, getScreenSizeText} from '../../utils/CanvasUtils'
+import DescripotionDataContext from '../../Contexts/DescripotionDataContext';
 
 const FabricCanvas: React.FC = () => {
   const { screenMFRData } = useContext(ScreenMFRDataContext);
   const { selectedConfiguration, setSelectedConfiguration } = useContext(SelectedConfigurationContext);
   const { additionalConfiguration, setAdditionalConfiguration } = useContext(AdditionalConfigurationContext);
-
+const { descriptionConfiguration } = useContext(DescripotionDataContext);
 
   const borderColor = "rgba(0, 0, 0, 0.6)";
   const headingTextColor = "rgba(0, 0, 0, 0.8)";
@@ -16,7 +18,7 @@ const FabricCanvas: React.FC = () => {
   const fillColor = "rgba(0, 0, 0, 0.4)";
   const cardBorderColor = "rgba(0, 0, 0, 0.5)";
   const cardTextColor = "rgba(255, 255, 255,0.8)";
-  const highlightFillColor = "rgba(255, 255, 255, 0.5)";
+  const highlightFillColor = "rgba(255, 125, 25, 0.4)";
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const fabricCanvasRef = useRef<fabric.Canvas | null>(null);
@@ -25,6 +27,7 @@ const FabricCanvas: React.FC = () => {
   const [canvasSize, setCanvasSize] = useState({ width: 800, height: 450 });
   const [screenDimensionBox, setScreenDimensionBox] = useState<fabric.Group[]>([]);
   const [nicheDimensionBox, setNicheDimensionBox] = useState<fabric.Group[]>([]);
+  const [descriptionBox, setDescriptionBox] = useState<fabric.Group[]>([]);
 
   const [selectedConfigurationValues, setSelectedConfigurationValues] = useState({
     mediaPlayerMFR: selectedConfiguration.mediaPlayerMFR || null,
@@ -33,14 +36,22 @@ const FabricCanvas: React.FC = () => {
     screenMFR: selectedConfiguration.screenMFR || null,
   });
 
+
   useEffect(() => {
-    setSelectedConfigurationValues({
-      mediaPlayerMFR: selectedConfiguration.mediaPlayerMFR || null,
-      mount: selectedConfiguration.mount || null,
-      receptacleBox: selectedConfiguration.receptacleBox || null,
-      screenMFR: selectedConfiguration.screenMFR || null,
-    });
-  }, [selectedConfiguration]);
+    if (
+      selectedConfiguration.mediaPlayerMFR !== selectedConfigurationValues.mediaPlayerMFR ||
+      selectedConfiguration.mount !== selectedConfigurationValues.mount ||
+      selectedConfiguration.receptacleBox !== selectedConfigurationValues.receptacleBox ||
+      selectedConfiguration.screenMFR !== selectedConfigurationValues.screenMFR
+    ) {
+      setSelectedConfigurationValues({
+        mediaPlayerMFR: selectedConfiguration.mediaPlayerMFR || null,
+        mount: selectedConfiguration.mount || null,
+        receptacleBox: selectedConfiguration.receptacleBox || null,
+        screenMFR: selectedConfiguration.screenMFR || null,
+      });
+    }
+  }, [selectedConfiguration]);  
 
   // Define an interface for the rectangle options
   interface RectangleOptions {
@@ -58,8 +69,53 @@ const FabricCanvas: React.FC = () => {
     scaleFactor?: number;
     textOriginX?: string;
     fillColor?: string;
+    isMultiline?: boolean;
   }
 
+  const createDynamicImage = async ({
+    imageX,
+    imageY,
+    imageWidth,
+    imageHeight,
+    imageUrl,
+    isDraggable = true,
+  }: {
+    imageX: number;
+    imageY: number;
+    imageWidth: number;
+    imageHeight: number;
+    imageUrl: string;
+    isDraggable?: boolean;
+  }): Promise<fabric.Image> => {
+    // Load the image
+    return new Promise((resolve, reject) => {
+      fabric.Image.fromURL(
+        imageUrl,
+        (img) => {
+          // Set image properties
+          img.set({
+            left: imageX,
+            top: imageY,
+            width: imageWidth,
+            height: imageHeight,
+            scaleX: imageWidth / img.width!,
+            scaleY: imageHeight / img.height!,
+            selectable: isDraggable,
+            lockMovementX: !isDraggable,
+            lockMovementY: !isDraggable,
+            hasControls: isDraggable,
+          });
+  
+          resolve(img);
+        },
+        {
+          crossOrigin: 'Anonymous', // For cross-origin images
+        }
+      );
+    });
+  };
+
+  
   // Function to create the outer border with text and draggable option
   const createDynamicRectangle = ({
     rectX,
@@ -76,8 +132,8 @@ const FabricCanvas: React.FC = () => {
     fontWeight = 'normal',
     scaleFactor = 1,
     textOriginX = 'center',
+    isMultiline = false, // Add a flag to switch between Text and Textbox
   }: RectangleOptions): fabric.Group => {
-
     const rect = new fabric.Rect({
       left: rectX,
       top: rectY,
@@ -88,22 +144,41 @@ const FabricCanvas: React.FC = () => {
       strokeWidth: strokeWidth,
       strokeDashArray: isDotted ? [5, 5] : [],
     });
-
-    console.log("valueeeeee", textOriginX)
-    const textObj = new fabric.Text(String(text), {
-      fontSize: Math.min(rectWidth, rectHeight) * 0.2,
-      fill: textColor,
-      originX: textOriginX,
-      originY: 'center',
-      left: rectX + rectWidth / 2,
-      top: rectY + rectHeight / 2,
-      fontWeight: fontWeight,
-      scaleX: scaleFactor,
-      scaleY: scaleFactor,
-      fontFamily: 'Poppins',
-
-    });
-
+  
+    let textObj;
+  
+    if (isMultiline) {
+      // Use fabric.Textbox for multiline text
+      textObj = new fabric.Textbox(String(text), {
+        width: rectWidth, // Set the width for wrapping
+        fontSize: Math.min(rectWidth, rectHeight) * 0.2,
+        fill: textColor,
+        originX: textOriginX,
+        originY: 'center',
+        left: rectX + rectWidth / 2,
+        top: rectY + rectHeight / 2,
+        fontWeight: fontWeight,
+        scaleX: scaleFactor,
+        scaleY: scaleFactor,
+        fontFamily: 'Poppins',
+        textAlign: textOriginX, // Align text based on the originX property
+      });
+    } else {
+      // Use fabric.Text for single-line text
+      textObj = new fabric.Text(String(text), {
+        fontSize: Math.min(rectWidth, rectHeight) * 0.2,
+        fill: textColor,
+        originX: textOriginX,
+        originY: 'center',
+        left: rectX + rectWidth / 2,
+        top: rectY + rectHeight / 2,
+        fontWeight: fontWeight,
+        scaleX: scaleFactor,
+        scaleY: scaleFactor,
+        fontFamily: 'Poppins',
+      });
+    }
+  
     const group = new fabric.Group([rect, textObj], {
       left: rectX,
       top: rectY,
@@ -112,9 +187,10 @@ const FabricCanvas: React.FC = () => {
       lockMovementX: !isDraggable,
       lockMovementY: !isDraggable,
     });
-
+  
     return group;
   };
+  
 
   // Update canvas size dynamically
   const updateCanvasSize = () => {
@@ -149,6 +225,28 @@ const FabricCanvas: React.FC = () => {
         });
 
         nicheDimensionBox.forEach((element) => {
+          const rectWidth = parentWidth * 0.3;
+          const rectHeight = parentHeight * 0.2;
+          const rectX = parentWidth * 0.1;
+          const rectY = parentHeight * 0.1;
+
+          const rect = element.item(0) as fabric.Rect;
+          const text = element.item(1) as fabric.Text;
+
+          rect.set({ width: rectWidth, height: rectHeight, left: rectX, top: rectY });
+          text.set({
+            left: rectX + rectWidth / 2,
+            top: rectY + rectHeight / 2,
+            fontSize: Math.min(rectWidth, rectHeight) * 0.2,
+          });
+
+          element.set({ left: rectX, top: rectY });
+
+          fabricCanvasRef.current?.requestRenderAll();
+        });
+
+
+        descriptionBox.forEach((element) => {
           const rectWidth = parentWidth * 0.3;
           const rectHeight = parentHeight * 0.2;
           const rectX = parentWidth * 0.1;
@@ -205,6 +303,7 @@ const FabricCanvas: React.FC = () => {
       scaleFactor: 1.95,
       fontWeight: '600',
       textOriginX: 'right',
+    
     });
 
     const screenHeightText = 'Height';
@@ -435,6 +534,311 @@ const FabricCanvas: React.FC = () => {
     setScreenDimensionBox([outerBorder, headingTextContainer, screenHeightTextContainer]);
   };
 
+
+  const createDescriptionBox = () => {
+    const canvas = fabricCanvasRef.current;
+    if (!canvas) return;
+
+    const { width, height } = canvasSize;
+
+    const rectWidth = width * 0.39;
+    const rectHeight = height * 0.28 ;
+    const rectX = width * 0.595;
+    const rectY = height * 0.69;
+
+    const outerBorder = createDynamicRectangle({
+      rectX,
+      rectY,
+      rectWidth,
+      rectHeight,
+      strokeColor: cardBorderColor,
+      strokeWidth: 1,
+    });
+
+    const logoImage = createDynamicImage({
+      imageX: rectX * 1.01,
+      imageY: rectY * 1.2,
+      imageWidth: rectWidth * 0.6,
+      imageHeight: height * 0.06,
+      imageUrl: "./logo.png",
+    });
+
+
+
+    const addressText = "361 Steelcase RD. W, #1, MARKHAM. ONTARIO Phone: (416) 900-2233";
+    const addressTextContainer = createDynamicRectangle({
+      rectX: rectX * 1.14,
+      rectY: rectY * 1.0,
+      rectWidth: rectWidth * 0.36,
+      rectHeight: height * 0.1,
+      text: addressText,
+      textColor: headingTextColor,
+      scaleFactor: 0.76,
+      fontWeight: '300',
+      textOriginX: 'left',
+      isMultiline: true
+    });
+
+
+    const descriptionTitleText = "Description";
+    const descriptionTitleTextContainer = createDynamicRectangle({
+      rectX: rectX * 1.33,
+      rectY: rectY * 0.983,
+      rectWidth: rectWidth * 0.36,
+      rectHeight: height * 0.1,
+      text: descriptionTitleText,
+      textColor: headingTextColor,
+      scaleFactor: 0.8,
+      fontWeight: '400',
+      textOriginX: 'left',
+    });
+
+    const descriptionText = getDescriptionContainerTitle(descriptionConfiguration);
+    const descriptionTextContainer = createDynamicRectangle({
+      rectX: rectX * 1.285,
+      rectY: rectY * 1.02,
+      rectWidth: rectWidth * 0.5,
+      rectHeight: height * 0.1,
+      text: descriptionText,
+      textColor: headingTextColor,
+      scaleFactor: 0.83,
+      fontWeight: '500',
+      textOriginX: 'left',
+    });
+
+    const topRowPositionY = rectY * 1.14;
+
+    const secondRowPositionY = rectY * 1.185;
+    const secondaRowPositionX = rectX * 1.158;
+    const thirdRowPositionX = rectX * 1.302;
+    const fourthRowPositionX = rectX * 1.446;
+
+    const thirdRowPositionY = rectY * 1.245;
+    const forthColumnPositiony = rectY * 1.29;
+
+    const column1height = height * 0.04
+    const columnwidth = rectWidth * 0.22;
+    const column4width = rectWidth * 0.29;
+
+
+
+
+    
+
+    const drawnText = 'Drawn';
+    const drawnTextContainer = createDynamicRectangle({
+      rectX: rectX * 1.015,
+      rectY: topRowPositionY,
+      rectWidth: columnwidth,
+      rectHeight: height * 0.03,
+      strokeColor: cardBorderColor,
+      fillColor: highlightFillColor,
+      strokeWidth: 1,
+      text: drawnText,
+      textColor: textColor,
+      scaleFactor: 2.4,
+      fontWeight: '500',
+    });
+
+    const drawerNameText = getDrawerName(descriptionConfiguration);
+    const drawnNameContainer = createDynamicRectangle({
+      rectX: rectX * 1.015,
+      rectY: secondRowPositionY,
+      rectWidth: columnwidth,
+      rectHeight: column1height,
+      strokeColor: cardBorderColor,
+      strokeWidth: 1,
+      text: drawerNameText,
+      textColor: textColor,
+      scaleFactor: 1.5,
+    });
+
+    const dimensionsTitleText = 'Dimension in inches';
+    const dimensionsTitleTextContainer = createDynamicRectangle({
+      rectX: secondaRowPositionX,
+      rectY: topRowPositionY,
+      rectWidth: columnwidth,
+      rectHeight: height * 0.072,
+      strokeColor: cardBorderColor,
+      fillColor: highlightFillColor,
+      strokeWidth: 1,
+      text: dimensionsTitleText,
+      textColor: textColor,
+      scaleFactor: 0.6,
+      // isMultiline : true
+      fontWeight: '500',
+    });
+
+    const dateTextContainer = createDynamicRectangle({
+      rectX: rectX * 1.015,
+      rectY: thirdRowPositionY,
+      rectWidth: columnwidth,
+      rectHeight: height * 0.03,
+      strokeColor: cardBorderColor,
+      fillColor: highlightFillColor,
+      strokeWidth: 1,
+      text: "Date",
+      textColor: textColor,
+      scaleFactor: 2.4,
+      fontWeight: '500',
+
+    });
+
+    const dateContainer = createDynamicRectangle({
+      rectX: rectX * 1.015,
+      rectY: forthColumnPositiony,
+      rectWidth: columnwidth,
+      rectHeight: column1height,
+      strokeColor: cardBorderColor,
+      strokeWidth: 1,
+      text: getDate(descriptionConfiguration),
+      textColor: textColor,
+      scaleFactor: 1.8,
+      fontWeight: '500',
+
+    });
+
+    const sheetTextContainer = createDynamicRectangle({
+      rectX: secondaRowPositionX,
+      rectY: thirdRowPositionY,
+      rectWidth: columnwidth,
+      rectHeight: height * 0.03,
+      strokeColor: cardBorderColor,
+      fillColor: highlightFillColor,
+      strokeWidth: 1,
+      text: "Sheet",
+      textColor: textColor,
+      scaleFactor: 2.4,
+      fontWeight: '500',
+
+    });
+
+    const sheetContainer = createDynamicRectangle({
+      rectX: secondaRowPositionX,
+      rectY: forthColumnPositiony,
+      rectWidth: columnwidth,
+      rectHeight: column1height,
+      strokeColor: cardBorderColor,
+      strokeWidth: 1,
+      text: "1 of 1",
+      textColor: textColor,
+      scaleFactor: 1.8,
+      fontWeight: '500',
+
+    });
+
+    const revisonTextContainer = createDynamicRectangle({
+      rectX: thirdRowPositionX,
+      rectY: thirdRowPositionY,
+      rectWidth: columnwidth,
+      rectHeight: height * 0.03,
+      strokeColor: cardBorderColor,
+      fillColor: highlightFillColor,
+      strokeWidth: 1,
+      text: "Revision",
+      textColor: textColor,
+      scaleFactor: 2.4,
+      fontWeight: '500',
+
+    });
+
+    const revisionContainer = createDynamicRectangle({
+      rectX: thirdRowPositionX,
+      rectY: forthColumnPositiony,
+      rectWidth: columnwidth,
+      rectHeight: column1height,
+      strokeColor: cardBorderColor,
+      strokeWidth: 1,
+      text: "00",
+      textColor: textColor,
+      scaleFactor: 1.8,
+      fontWeight: '500',
+
+    });
+
+    const screenSizeTextContainer = createDynamicRectangle({
+      rectX: fourthRowPositionX,
+      rectY: topRowPositionY,
+      rectWidth: column4width,
+      rectHeight: height * 0.03,
+      strokeColor: cardBorderColor,
+      fillColor: highlightFillColor,
+      strokeWidth: 1,
+      text: "Screen Size",
+      textColor: textColor,
+      scaleFactor: 2.4,
+      fontWeight: '500',
+    });
+
+    const screenSizeText = getScreenSizeText(descriptionConfiguration);
+    const screenSizeContainer = createDynamicRectangle({
+      rectX: fourthRowPositionX,
+      rectY: secondRowPositionY,
+      rectWidth: column4width,
+      rectHeight: column1height,
+      strokeColor: cardBorderColor,
+      strokeWidth: 1,
+      text: screenSizeText,
+      textColor: textColor,
+      scaleFactor: 1.5,
+    });
+
+
+    const departmentTextContainer = createDynamicRectangle({
+      rectX: fourthRowPositionX,
+      rectY: thirdRowPositionY,
+      rectWidth: column4width,
+      rectHeight: height * 0.03,
+      strokeColor: cardBorderColor,
+      fillColor: highlightFillColor,
+      strokeWidth: 1,
+      text: "Department",
+      textColor: textColor,
+      scaleFactor: 2.4,
+      fontWeight: '500',
+
+    });
+
+    const departmentContainer = createDynamicRectangle({
+      rectX: fourthRowPositionX,
+      rectY: forthColumnPositiony,
+      rectWidth: column4width,
+      rectHeight: column1height,
+      strokeColor: cardBorderColor,
+      strokeWidth: 1,
+      text: getDepartmentText(descriptionConfiguration),
+      textColor: textColor,
+      scaleFactor: 1.8,
+      fontWeight: '500',
+
+    });
+
+
+    canvas.add(outerBorder);
+    // canvas.add(logoImage);
+    canvas.add(descriptionTitleTextContainer);
+    canvas.add(addressTextContainer);
+    canvas.add(descriptionTextContainer);
+    canvas.add(drawnTextContainer);
+    canvas.add(drawnNameContainer);
+    canvas.add(dimensionsTitleTextContainer);
+   canvas.add(dateTextContainer);
+    canvas.add(dateContainer);
+    canvas.add(sheetTextContainer);
+    canvas.add(sheetContainer);
+    canvas.add(revisonTextContainer);
+    canvas.add(revisionContainer);
+    canvas.add(screenSizeTextContainer);
+    canvas.add(screenSizeContainer);
+    canvas.add(departmentTextContainer);
+    canvas.add(departmentContainer);
+
+    setScreenDimensionBox([outerBorder, addressTextContainer]);
+  };
+
+
+
+
   useEffect(() => {
     // Initialize Fabric.js canvas
     if (canvasRef.current && !fabricCanvasRef.current) {
@@ -445,6 +849,7 @@ const FabricCanvas: React.FC = () => {
 
       createScreenDimensionBox();
       createNicheDimensionBox();
+      createDescriptionBox();
     }
 
     // Handle resizing
@@ -459,6 +864,7 @@ const FabricCanvas: React.FC = () => {
       }
     };
   }, [canvasSize]);
+
 
   return (
     <div ref={containerRef} className='h-full w-full'>

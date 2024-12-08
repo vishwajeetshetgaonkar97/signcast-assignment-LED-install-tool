@@ -46,6 +46,8 @@ const ConfigurationComponent = () => {
 
   }, [screenMFRData, mediaPlayerMFRData, mountsData, receptacleBoxData]);
 
+
+
   const handleSelectionChange = (field: string, value: string) => {
     let updatedValue = null;
     if (field === "screenMFR") {
@@ -66,11 +68,12 @@ const ConfigurationComponent = () => {
   const handleAdditionalConfigChange = (field: string, value: string | number) => {
     const updatedConfig = { ...additionalConfig, [field]: value };
     setAdditionalConfig(updatedConfig);
-    setAdditionalConfiguration(updatedConfig); // Update context
+    setAdditionalConfiguration(updatedConfig);
   };
 
   console.log("Selected Configuration:", selectedConfiguration);
   console.log("Additional Configuration:", additionalConfiguration);
+  console.log("Selected Values:", selectedValues);
 
   return (
     <form className="h-max px-4 py-3 space-y-0 border border-border-color">
