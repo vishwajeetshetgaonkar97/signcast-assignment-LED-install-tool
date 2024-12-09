@@ -1,4 +1,5 @@
 
+import { jsPDF } from "jspdf";
 const getScreenHeightDimension = (selectedConfigurationValues: any) => {
     if (!selectedConfigurationValues.screenMFR) return 0;
     return parseFloat(selectedConfigurationValues.screenMFR?.Height || 0);
@@ -116,8 +117,37 @@ const getRBoxDepth = (additionalConfiguration: any) => {
     return "-";
 }
 
+const downloadCanvasAsPdf = (canvas) => {
+    if (!canvas) return;
+  
+    // Create a temporary canvas to draw the high-resolution image
+    const tempCanvas = document.createElement('canvas');
+    const tempContext = tempCanvas.getContext('2d');
+    const scaleFactor = 3;
+    const width = canvas.getWidth() * scaleFactor;
+    const height = canvas.getHeight() * scaleFactor;
+  
+    tempCanvas.width = width;
+    tempCanvas.height = height;
+  
+    tempContext.scale(scaleFactor, scaleFactor);
+  
+    tempContext.drawImage(canvas.getElement(), 0, 0, canvas.getWidth(), canvas.getHeight());
+  
+    const imgData = tempCanvas.toDataURL('image/png');
+  
+    // Using jsPDF to create a PDF and add the image
+    const pdf = new jsPDF('landscape', 'px', [width, height]);
+    pdf.addImage(imgData, 'PNG', 0, 0, width, height);
+    pdf.save('high_quality_canvas.pdf');
+  };
+  
+  // Make sure to include the jsPDF library in your HTML file
+  // <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+  
+
 export default getDescriptionContainerTitle
 export { getDescriptionContainerTitle, getDrawerName, getDate, 
     getScreenSizeText, getDepartmentText, getRBoxHeight, getRBoxWidth, getRBoxDepth, 
-    getScreenHeightDimension,getScreenWidthDimension ,getScreenDistanceFromFloorLine, getNicheHeight,getNicheWidth,getNicheDepth
+    getScreenHeightDimension,getScreenWidthDimension ,getScreenDistanceFromFloorLine, getNicheHeight,getNicheWidth,getNicheDepth, downloadCanvasAsPdf
 }

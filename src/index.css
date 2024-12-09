@@ -41,26 +41,24 @@
 
 html {
   transition: all 200ms;
+  max-width: 1920px;
 }
 
-/* width */
+/* custom scrollbar  */
 ::-webkit-scrollbar {
   width: 4px;
 }
 
-/* Track */
 ::-webkit-scrollbar-track {
   box-shadow: inset 0 0 5px rgba(158, 158, 158, 0.8); 
   border-radius: 0px;
 }
  
-/* Handle */
 ::-webkit-scrollbar-thumb {
   background: #ff7d19c2; 
   border-radius: 10px;
 }
 
-/* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.7); 
 }

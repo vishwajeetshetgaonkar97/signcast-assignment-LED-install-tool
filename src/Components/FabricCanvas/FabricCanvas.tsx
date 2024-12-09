@@ -4,8 +4,13 @@ import SelectedConfigurationContext from '../../Contexts/SelectedConfigurationCo
 import AdditionalConfigurationContext from '../../Contexts/AdditionalConfigurationContext';
 import DescripotionDataContext from '../../Contexts/DescripotionDataContext';
 import { createDescriptionBox, createNicheDimensionBox, createNotesBox, createScreenDimensionBox } from '../../utils/CanvasDrawingsUtils';
+import { downloadCanvasAsPdf } from '../../utils/CanvasUtils';
 
-const FabricCanvas: React.FC = () => {
+interface CanvusProps {
+  fabricCanvasRef: React.MutableRefObject<fabric.Canvas>;
+}
+
+const FabricCanvas: React.FC <CanvusProps>= ({fabricCanvasRef}) => {
   const { selectedConfiguration } = useContext(SelectedConfigurationContext);
   const { additionalConfiguration } = useContext(AdditionalConfigurationContext);
   const { descriptionConfiguration } = useContext(DescripotionDataContext);
@@ -20,7 +25,6 @@ const FabricCanvas: React.FC = () => {
   const highlightFillColor = "rgba(248, 230, 186, 1)";
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const fabricCanvasRef = useRef<fabric.Canvas | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
 
@@ -267,6 +271,7 @@ const FabricCanvas: React.FC = () => {
         ref={canvasRef}
         className='border border-border-color h-full w-full'
       />
+      
     </div>
   );
 };

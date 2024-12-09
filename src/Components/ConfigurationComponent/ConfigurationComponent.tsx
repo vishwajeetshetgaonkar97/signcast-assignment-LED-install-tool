@@ -8,13 +8,13 @@ import AdditionalConfigurationContext from "../../Contexts/AdditionalConfigurati
 
 
 const ConfigurationComponent = () => {
-
   const { screenMFRData } = useContext(ScreenMFRDataContext);
   const { mediaPlayerMFRData } = useContext(MediaPlayerMFRDataContext);
   const { mountsData } = useContext(MountsDataContext);
   const { receptacleBoxData } = useContext(ReceptacleBoxDataContext);
   const { selectedConfiguration, setSelectedConfiguration } = useContext(SelectedConfigurationContext);
   const { additionalConfiguration, setAdditionalConfiguration } = useContext(AdditionalConfigurationContext);
+
 
   // Default values initialization
   const [selectedValues, setSelectedValues] = useState({

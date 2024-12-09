@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import FabricCanvas from "../FabricCanvas/FabricCanvas";
 import ConfigurationSectionComponent from "../ConfigurationSectionComponent/ConfigurationSectionComponent";
 import { fetchGoogleSheetData } from "./../../api/fetchGoogleSheetData";
@@ -17,6 +17,7 @@ import ReceptacleBoxDataContext from "../../Contexts/ReceptacleBoxDataContext";
 import SelectedConfigurationContext from "../../Contexts/SelectedConfigurationContext";
 import AdditionalConfigurationContext from "../../Contexts/AdditionalConfigurationContext";
 import DescripotionDataContext from "../../Contexts/DescripotionDataContext";
+import * as fabric from 'fabric';
 
 const DrawingToolComponent = () => {
   const [screenMFRData, setScreenMFRData] = useState<ScreenMFR[]>([]);
@@ -30,6 +31,8 @@ const DrawingToolComponent = () => {
     mount?: Mounts;
     receptacleBox?: ReceptacleBox;
   }>({});
+
+  const fabricCanvasRef = useRef<fabric.Canvas | null>(null);
 
   const [additionalConfiguration, setAdditionalConfiguration] = useState<AdditionalConfiguration>({
     orientation: "horizontal",
@@ -114,9 +117,9 @@ const DrawingToolComponent = () => {
                 <AdditionalConfigurationContext.Provider value={AdditionalConfigurationContextValue}>
                   <DescripotionDataContext.Provider value={DescriptionConfigurationContextValue}>
 
-                    <div className="flex h-full pb-2 align-center justify-center w-full gap-4">
-                      <FabricCanvas />
-                      <ConfigurationSectionComponent />
+                    <div className="flex h-full pb-2 align-center justify-center w-full gap-4 flex-col md:flex-row">
+                      <FabricCanvas fabricCanvasRef={fabricCanvasRef} />
+                      <ConfigurationSectionComponent fabricCanvasRef={fabricCanvasRef} />
                     </div>
 
                   </DescripotionDataContext.Provider>
