@@ -117,6 +117,15 @@ const getRBoxDepth = (additionalConfiguration: any) => {
     return "-";
 }
 
+const getIfScreenOrientationVertical = (additionalConfiguration: any) => {
+
+    if (additionalConfiguration && additionalConfiguration.orientation === "vertical") {
+        return additionalConfiguration.orientation;
+    }
+
+    return "";
+}
+
 const downloadCanvasAsPdf = (canvas) => {
     if (!canvas) return;
 
@@ -139,16 +148,14 @@ const downloadCanvasAsPdf = (canvas) => {
     // Using jsPDF to create a PDF and add the image
     const pdf = new jsPDF('landscape', 'px', [width, height]);
     pdf.addImage(imgData, 'PNG', 0, 0, width, height);
-    pdf.save('high_quality_canvas.pdf');
+    pdf.save('Signcast Media Inc.pdf');
 };
 
-// Make sure to include the jsPDF library in your HTML file
-// <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
 
 
 export default getDescriptionContainerTitle
 export {
     getDescriptionContainerTitle, getDrawerName, getDate,
     getScreenSizeText, getDepartmentText, getRBoxHeight, getRBoxWidth, getRBoxDepth,
-    getScreenHeightDimension, getScreenWidthDimension, getScreenDistanceFromFloorLine, getNicheHeight, getNicheWidth, getNicheDepth, downloadCanvasAsPdf
+    getScreenHeightDimension, getScreenWidthDimension, getScreenDistanceFromFloorLine, getNicheHeight, getNicheWidth, getNicheDepth, downloadCanvasAsPdf,getIfScreenOrientationVertical
 }

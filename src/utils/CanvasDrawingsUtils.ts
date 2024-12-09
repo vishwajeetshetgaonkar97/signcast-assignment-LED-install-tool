@@ -1,6 +1,6 @@
 
 import { fill } from "pdf-lib";
-import getDescriptionContainerTitle, { getDate, getDepartmentText, getDrawerName, getNicheDepth, getNicheHeight, getNicheWidth, getRBoxDepth, getRBoxHeight, getRBoxWidth, getScreenDistanceFromFloorLine, getScreenHeightDimension, getScreenSizeText, getScreenWidthDimension } from "./CanvasUtils";
+import getDescriptionContainerTitle, { getDate, getDepartmentText, getDrawerName, getIfScreenOrientationVertical, getNicheDepth, getNicheHeight, getNicheWidth, getRBoxDepth, getRBoxHeight, getRBoxWidth, getScreenDistanceFromFloorLine, getScreenHeightDimension, getScreenSizeText, getScreenWidthDimension } from "./CanvasUtils";
 
 const createScreenDimensionBox = ({
   fabricCanvasRef,
@@ -683,6 +683,8 @@ const createDimensionBoxDiagram = ({
   const rectX = width * 0.01;
   const rectY = height * 0.03;
 
+  const isScreenOrientationVertical = getIfScreenOrientationVertical(additionalConfiguration);
+
   const elements = [
     // outer boundary
     {
@@ -695,38 +697,32 @@ const createDimensionBoxDiagram = ({
     },
     // main diagram 
     {
-      rectX: rectX * 12.5,
-      rectY: rectY * 9,
-      rectWidth: rectWidth * 0.64,
-      rectHeight: height * 0.37,
+      rectX: isScreenOrientationVertical ? rectX * 24 : rectX * 12.5,
+      rectY: isScreenOrientationVertical ? rectY * 8.9 : rectY * 9,
+      rectWidth: isScreenOrientationVertical ? rectWidth * 0.24 : rectWidth * 0.64,
+      rectHeight: isScreenOrientationVertical ? height * 0.37 : height * 0.37,
       strokeColor: textColor,
       strokeWidth: 4,
     },
     {
-      rectX: rectX * 11.5,
-      rectY: rectY * 8.3,
-      rectWidth: rectWidth * 0.68,
-      rectHeight: height * 0.415,
+      rectX: isScreenOrientationVertical ? rectX * 22.9 : rectX * 11.5,
+      rectY: isScreenOrientationVertical ? rectY * 8.3 : rectY * 8.3,
+      rectWidth: isScreenOrientationVertical ? rectWidth * 0.28 : rectWidth * 0.68,
+      rectHeight: isScreenOrientationVertical ? height * 0.415 : height * 0.415,
       strokeColor: textColor,
       strokeWidth: 0.8,
     },
     {
-      rectX: rectX * 15.2,
-      rectY: rectY * 10.6,
-      rectWidth: rectWidth * 0.555,
-      rectHeight: height * 0.28,
+      rectX: isScreenOrientationVertical ? rectX * 26 : rectX * 15.2,
+      rectY: isScreenOrientationVertical ? rectY * 10.6 : rectY * 10.6,
+      rectWidth: isScreenOrientationVertical ? rectWidth * 0.175 : rectWidth * 0.555,
+      rectHeight: isScreenOrientationVertical ? height * 0.28 : height * 0.28,
       strokeColor: textColor,
       isDotted: true,
       strokeWidth: 0.7,
     },
-    {
-      rectX: rectX * 1.01,
-      rectY: rectY * 1.2,
-      imageUrl: "./logo.png",
-      isImage: true,
-      scaleFactor: 0.45,
-    },
-// dotted center lines 
+
+    // dotted center lines 
     {
       length: height * 0.75,
       color: textColor,
@@ -752,6 +748,8 @@ const createDimensionBoxDiagram = ({
       orientation: 'horizontal',
     },
     // supporting lines 
+
+    // floor line 
     {
       length: width * 0.478,
       color: textColor,
@@ -761,12 +759,16 @@ const createDimensionBoxDiagram = ({
       y: rectY * 30,
       orientation: 'horizontal',
     },
+
+    // horizontal lines 
+
+    // niche lines
     {
       length: width * 0.03,
       color: textColor,
       strokeWidth: 1,
       canvas: canvas,
-      x: rectX * 8,
+      x: isScreenOrientationVertical ? rectX * 19.6 : rectX * 8,
       y: rectY * 8.3,
       orientation: 'horizontal',
     },
@@ -775,16 +777,18 @@ const createDimensionBoxDiagram = ({
       color: textColor,
       strokeWidth: 1,
       canvas: canvas,
-      x: rectX * 8,
+      x: isScreenOrientationVertical ? rectX * 19.6 : rectX * 8,
       y: rectY * 22.1,
       orientation: 'horizontal',
     },
+
+    // screen lines
     {
       length: width * 0.03,
       color: textColor,
       strokeWidth: 1,
       canvas: canvas,
-      x: rectX * 50.7,
+      x: isScreenOrientationVertical ? rectX * 39.1 : rectX * 50.7,
       y: rectY * 9,
       orientation: 'horizontal',
     },
@@ -793,52 +797,67 @@ const createDimensionBoxDiagram = ({
       color: textColor,
       strokeWidth: 1,
       canvas: canvas,
-      x: rectX * 50.7,
+      x: isScreenOrientationVertical ? rectX * 39.1 : rectX * 50.7,
       y: rectY * 21.4,
       orientation: 'horizontal',
     },
-    {
-      length: width * 0.03,
-      color: textColor,
-      strokeWidth: 1,
-      canvas: canvas,
-      x: rectX * 49,
-      y: rectY * 6.2,
-      orientation: 'verical',
-    },
+
+    // vertical lines 
+
+    // niche lines
+
     {
       length: height * 0.08,
       color: textColor,
       strokeWidth: 1,
       canvas: canvas,
-      x: rectX * 50.3,
+      x: isScreenOrientationVertical ? rectX * 23 : rectX * 11.6,
       y: rectY * 22.4,
       orientation: 'vertical',
+    },
+
+    {
+      length: height * 0.08,
+      color: textColor,
+      strokeWidth: 1,
+      canvas: canvas,
+      x: isScreenOrientationVertical ? rectX * 38.9 : rectX * 50.3,
+      y: rectY * 22.4,
+      orientation: 'vertical',
+    },
+
+
+    // screen lines
+    
+    {
+      length: width * 0.03,
+      color: textColor,
+      strokeWidth: 1,
+      canvas: canvas,
+      x: isScreenOrientationVertical ? rectX * 24 : rectX * 12.6,
+      y: rectY * 6.3,
+      orientation: 'verical',
     },
     {
       length: width * 0.03,
       color: textColor,
       strokeWidth: 1,
       canvas: canvas,
-      x: rectX * 12.6,
-      y: rectY * 6.2,
+      x: isScreenOrientationVertical ? rectX * 37.9 : rectX * 49,
+      y: rectY * 6.3,
       orientation: 'verical',
     },
-    {
-      length: height * 0.08,
-      color: textColor,
-      strokeWidth: 1,
-      canvas: canvas,
-      x: rectX * 11.6,
-      y: rectY * 22.4,
-      orientation: 'vertical',
-    },
+
+
+
+// measurement lines 
+
     {
       length: height * 0.395,
       color: textColor,
       strokeWidth: 1,
       canvas: canvas,
-      x: rectX * 8,
+      x: isScreenOrientationVertical ? rectX * 20 : rectX * 8,
       y: rectY * 8.5,
       orientation: 'vertical',
       arrowStart: true,
@@ -849,7 +868,7 @@ const createDimensionBoxDiagram = ({
       color: textColor,
       strokeWidth: 1,
       canvas: canvas,
-      x: rectX * 53.6,
+      x: isScreenOrientationVertical ? rectX * 41.8 : rectX * 53.6,
       y: rectY * 9.2,
       orientation: 'vertical',
       arrowStart: true,
@@ -866,32 +885,35 @@ const createDimensionBoxDiagram = ({
       arrowStart: true,
       arrowEnd: true,
     },
+
+    // screen length
     {
-      length: width * 0.354,
+      length: isScreenOrientationVertical ? width * 0.134 : width * 0.354,
       color: textColor,
       strokeWidth: 0.8,
       canvas: canvas,
-      x: rectX * 13,
+      x: isScreenOrientationVertical ? rectX * 24.3 : rectX * 13,
       y: rectY * 6.2,
       orientation: 'horizontal',
       arrowStart: true,
       arrowEnd: true,
     },
-    
+
     {
-      length: width * 0.376,
+      length: isScreenOrientationVertical ? width * 0.154 : width * 0.376,
       color: textColor,
       strokeWidth: 0.8,
       canvas: canvas,
-      x: rectX * 12,
+      x: isScreenOrientationVertical ? rectX * 23.3 : rectX * 12,
       y: rectY * 25,
       orientation: 'horizontal',
       arrowStart: true,
       arrowEnd: true,
     },
+
     // dimension lables 
     {
-      rectX: rectX * 54.3,
+      rectX: isScreenOrientationVertical ? rectX * 42.5 : rectX * 54.3,
       rectY: rectY * 13.6,
       rectWidth: rectWidth * 0.06,
       rectHeight: height * 0.03,
@@ -915,7 +937,7 @@ const createDimensionBoxDiagram = ({
       scaleFactor: 2.3,
     },
     {
-      rectX: rectX * 4,
+      rectX: isScreenOrientationVertical ? rectX * 15.9 : rectX * 4,
       rectY: rectY * 13.6,
       rectWidth: rectWidth * 0.06,
       rectHeight: height * 0.03,
@@ -983,19 +1005,11 @@ const createDimensionBoxDiagram = ({
       textColor: textColor,
       scaleFactor: 5,
     },
-   
+
   ];
 
   elements.forEach(element => {
-    if (element.isImage) {
-      addImageToCanvas({
-        imageUrl: element.imageUrl,
-        scaleFactor: element.scaleFactor || 1,
-        canvas: canvas,
-        imageLeft: element.rectX * 1.02,
-        imageTop: element.rectY * 0.865,
-      });
-    } else if (element.length) { addLineToCanvas(element); } else {
+    if (element.length) { addLineToCanvas(element); } else {
       canvas.add(createDynamicRectangle(element, canvas));
     }
   });

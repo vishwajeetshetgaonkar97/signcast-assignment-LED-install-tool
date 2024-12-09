@@ -205,7 +205,6 @@ const FabricCanvas: React.FC<CanvusProps> = ({ fabricCanvasRef }) => {
     textOriginX = 'center',
     isMultiline = false,
   }: RectangleOptions): fabric.Group => {
-
     const rect = new fabric.Rect({
       left: rectX,
       top: rectY,
@@ -216,7 +215,7 @@ const FabricCanvas: React.FC<CanvusProps> = ({ fabricCanvasRef }) => {
       strokeWidth: strokeWidth,
       strokeDashArray: isDotted ? [9, 9] : [],
     });
-
+  
     const textOptions = {
       fontSize: Math.min(rectWidth, rectHeight) * 0.2,
       fill: textColor,
@@ -229,11 +228,11 @@ const FabricCanvas: React.FC<CanvusProps> = ({ fabricCanvasRef }) => {
       scaleY: scaleFactor,
       fontFamily: 'Poppins',
     };
-
+  
     const textObj = isMultiline
       ? new fabric.Textbox(String(text).replace(/\\n/g, '\n'), { ...textOptions, width: rectWidth, textAlign: textOriginX })
       : new fabric.Text(String(text), textOptions);
-
+  
     const group = new fabric.Group([rect, textObj], {
       left: rectX,
       top: rectY,
@@ -242,9 +241,10 @@ const FabricCanvas: React.FC<CanvusProps> = ({ fabricCanvasRef }) => {
       lockMovementX: !isDraggable,
       lockMovementY: !isDraggable,
     });
-
+  
     return group;
   };
+  
 
 
 
