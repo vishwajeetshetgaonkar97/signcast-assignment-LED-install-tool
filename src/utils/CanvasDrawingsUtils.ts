@@ -1014,17 +1014,10 @@ const createDimensionBoxDiagram = ({
     }
   });
 };
-const createMovableDimensionBox = ({
+const createMovableReceptorBox = ({
   fabricCanvasRef,
   borderColor,
-  headingTextColor,
-  cardBorderColor,
-  fillColor,
-  cardTextColor,
-  textColor,
-  selectedConfigurationValues,
-  additionalConfiguration,
-  createDynamicRectangle,
+
 }) => {
   const canvas = fabricCanvasRef.current;
   if (!canvas) return;
@@ -1086,4 +1079,4 @@ const createMovableDimensionBox = ({
 
 
 
-export { createScreenDimensionBox, createNicheDimensionBox, createNotesBox, createDescriptionBox, createDimensionBoxDiagram, createMovableDimensionBox };
+export { createScreenDimensionBox, createNicheDimensionBox, createNotesBox, createDescriptionBox, createDimensionBoxDiagram, createMovableReceptorBox };

@@ -3,7 +3,7 @@ import * as fabric from 'fabric';
 import SelectedConfigurationContext from '../../Contexts/SelectedConfigurationContext';
 import AdditionalConfigurationContext from '../../Contexts/AdditionalConfigurationContext';
 import DescripotionDataContext from '../../Contexts/DescripotionDataContext';
-import { createDescriptionBox, createDimensionBoxDiagram, createMovableDimensionBox, createNicheDimensionBox, createNotesBox, createScreenDimensionBox } from '../../utils/CanvasDrawingsUtils';
+import { createDescriptionBox, createDimensionBoxDiagram, createMovableReceptorBox, createNicheDimensionBox, createNotesBox, createScreenDimensionBox } from '../../utils/CanvasDrawingsUtils';
 
 interface CanvusProps {
   fabricCanvasRef: React.MutableRefObject<fabric.Canvas>;
@@ -354,17 +354,10 @@ const FabricCanvas: React.FC<CanvusProps> = ({ fabricCanvasRef }) => {
       selectedConfigurationValues,
       additionalConfiguration,
     })
-    createMovableDimensionBox({
+    createMovableReceptorBox({
       fabricCanvasRef,
       borderColor,
-      headingTextColor,
-      cardBorderColor,
-      fillColor,
-      cardTextColor,
-      textColor,
-      selectedConfigurationValues,
-      additionalConfiguration,
-      createDynamicRectangle,
+    
     })
 
     // Handle resizing
