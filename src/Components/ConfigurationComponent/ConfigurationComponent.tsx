@@ -27,7 +27,7 @@ const ConfigurationComponent = () => {
   // Additional Configuration state initialization
   const [additionalConfig, setAdditionalConfig] = useState({
     orientation: additionalConfiguration?.orientation || "horizontal",
-    nicheType: additionalConfiguration?.nicheType || "flat wall",
+    nicheType: additionalConfiguration?.nicheType || "niche",
     distanceFromFloor: additionalConfiguration?.distanceFromFloor || 50,
     nicheVr: additionalConfiguration?.nicheVr || 1.5,
     nicheDepth: additionalConfiguration?.nicheDepth || 0.5,
@@ -38,12 +38,14 @@ const ConfigurationComponent = () => {
 
   useEffect(() => {
 
-    setSelectedValues({
+    const updatedValues = {
       screenMFR: screenMFRData[0] || null,
       mediaPlayerMFR: mediaPlayerMFRData[0] || null,
       mount: mountsData[0] || null,
       receptacleBox: receptacleBoxData[0] || null,
-    });
+    };
+    setSelectedValues(updatedValues);
+    setSelectedConfiguration(updatedValues);
 
   }, [screenMFRData, mediaPlayerMFRData, mountsData, receptacleBoxData]);
 
@@ -73,7 +75,7 @@ const ConfigurationComponent = () => {
   };
 
   console.log("Selected Configuration:", selectedConfiguration);
-  console.log("Additional Configuration: 1234", additionalConfiguration);
+  console.log("Additional Configuration:", additionalConfiguration);
   console.log("Selected Values:", selectedValues);
 
   return (

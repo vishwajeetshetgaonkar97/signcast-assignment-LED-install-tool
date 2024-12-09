@@ -211,19 +211,20 @@ const FabricCanvas: React.FC = () => {
         createDynamicRectangle,
       })
 
-      createNicheDimensionBox({
-        fabricCanvasRef,
-        borderColor,
-        headingTextColor,
-        cardBorderColor,
-        fillColor,
-        cardTextColor,
-        textColor,
-        selectedConfigurationValues,
-        additionalConfiguration,
-        createDynamicRectangle,
-      });
-
+      {
+        additionalConfiguration && additionalConfiguration.nicheType === "niche" && createNicheDimensionBox({
+          fabricCanvasRef,
+          borderColor,
+          headingTextColor,
+          cardBorderColor,
+          fillColor,
+          cardTextColor,
+          textColor,
+          selectedConfigurationValues,
+          additionalConfiguration,
+          createDynamicRectangle,
+        });
+      }
       createDescriptionBox({
         fabricCanvasRef,
         borderColor: infoContainerBorderColor,
@@ -260,7 +261,7 @@ const FabricCanvas: React.FC = () => {
         fabricCanvasRef.current = null;
       }
     };
-  }, [selectedConfigurationValues, additionalConfiguration]);
+  }, [selectedConfigurationValues, additionalConfiguration, descriptionConfiguration]);
 
 
   return (

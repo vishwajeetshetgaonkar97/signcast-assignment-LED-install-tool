@@ -21,7 +21,6 @@ const DescriptionConfigComponent = () => {
       [name]: value,
     }));
 
-    // Update context values
     const updatedDescriptionConfig = {
       ...descriptionConfiguration,
       [name]: value,
@@ -100,6 +99,7 @@ const DescriptionConfigComponent = () => {
           type="date"
           id="date"
           name="date"
+          
           value={descriptionValues.date}
           onChange={handleChange}
           className="border bg-card-color border-border-color text-card-text-color text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"

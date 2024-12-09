@@ -32,22 +32,22 @@ const DrawingToolComponent = () => {
   }>({});
 
   const [additionalConfiguration, setAdditionalConfiguration] = useState<AdditionalConfiguration>({
-    orientation: "vertical",
-    nicheType: "flat wall",
-    distanceFromFloor: 0,
-    nicheVr: 0,
-    nicheDepth: 0,
+    orientation: "horizontal",
+    nicheType: "niche",
+    distanceFromFloor: 50,
+    nicheVr: 1.5,
+    nicheDepth: 0.5,
     rBoxHeight: 6.6,
     rBoxWidth: 6.012,
     rBoxDepth: 3.75,
   });
 
   const [descriptionConfiguration, setDescriptionConfiguration] = useState<DescriptionConfig>({
-    title: "",
-    drawer: "",
-    department: "",
-    screenSize: "",
-    date: new Date().toISOString().split('T')[0],
+    title: `Horizontal + PC in Niche`,
+    drawer: "SignCast",
+    department: "installation",
+    screenSize: `LG 55" Touch Display`,
+    date: new Date().toLocaleDateString('en-GB').split('/').join('/'),
   });
 
 
