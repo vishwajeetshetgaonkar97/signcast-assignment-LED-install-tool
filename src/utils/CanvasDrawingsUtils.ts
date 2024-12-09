@@ -1,5 +1,6 @@
 
-import getDescriptionContainerTitle, { getDate, getDepartmentText, getDrawerName, getNicheDepth, getNicheHeight, getNicheWidth, getRBoxDepth, getRBoxHeight, getRBoxWidth, getScreenHeightDimension, getScreenSizeText, getScreenWidthDimension } from "./CanvasUtils";
+import { fill } from "pdf-lib";
+import getDescriptionContainerTitle, { getDate, getDepartmentText, getDrawerName, getNicheDepth, getNicheHeight, getNicheWidth, getRBoxDepth, getRBoxHeight, getRBoxWidth, getScreenDistanceFromFloorLine, getScreenHeightDimension, getScreenSizeText, getScreenWidthDimension } from "./CanvasUtils";
 
 const createScreenDimensionBox = ({
   fabricCanvasRef,
@@ -683,6 +684,7 @@ const createDimensionBoxDiagram = ({
   const rectY = height * 0.03;
 
   const elements = [
+    // outer boundary
     {
       rectX,
       rectY,
@@ -691,6 +693,7 @@ const createDimensionBoxDiagram = ({
       strokeColor: textColor,
       strokeWidth: 0,
     },
+    // main diagram 
     {
       rectX: rectX * 12.5,
       rectY: rectY * 9,
@@ -723,9 +726,9 @@ const createDimensionBoxDiagram = ({
       isImage: true,
       scaleFactor: 0.45,
     },
-
+// dotted center lines 
     {
-      length: width * 0.4,
+      length: height * 0.75,
       color: textColor,
       strokeWidth: 0.9,
       isDotted: true,
@@ -737,23 +740,24 @@ const createDimensionBoxDiagram = ({
       orientation: 'vertical',
     },
     {
-      length: width * 0.5,
+      length: width * 0.53,
       color: textColor,
       strokeWidth: 0.9,
       isDotted: true,
       arrowStart: false,
       arrowEnd: false,
       canvas: canvas,
-      x: rectX * 6,
+      x: rectX * 4,
       y: rectY * 15,
       orientation: 'horizontal',
     },
+    // supporting lines 
     {
-      length: width * 0.48,
+      length: width * 0.478,
       color: textColor,
       strokeWidth: 0.5,
       canvas: canvas,
-      x: rectX * 6,
+      x: rectX * 6.5,
       y: rectY * 30,
       orientation: 'horizontal',
     },
@@ -803,7 +807,7 @@ const createDimensionBoxDiagram = ({
       orientation: 'verical',
     },
     {
-      length: width * 0.05,
+      length: height * 0.08,
       color: textColor,
       strokeWidth: 1,
       canvas: canvas,
@@ -821,7 +825,7 @@ const createDimensionBoxDiagram = ({
       orientation: 'verical',
     },
     {
-      length: width * 0.05,
+      length: height * 0.08,
       color: textColor,
       strokeWidth: 1,
       canvas: canvas,
@@ -840,7 +844,6 @@ const createDimensionBoxDiagram = ({
       arrowStart: true,
       arrowEnd: true,
     },
-    ,
     {
       length: height * 0.356,
       color: textColor,
@@ -853,16 +856,134 @@ const createDimensionBoxDiagram = ({
       arrowEnd: true,
     },
     {
-      rectX: rectX * 1.159,
-      rectY: rectY * 5,
-      rectWidth: rectWidth * 0.07,
-      rectHeight: height * 0.04,
-      strokeColor: borderColor,
-      strokeWidth: 1,
+      length: height * 0.425,
+      color: textColor,
+      strokeWidth: 0.8,
+      canvas: canvas,
+      x: rectX * 6.5,
+      y: rectY * 15.4,
+      orientation: 'vertical',
+      arrowStart: true,
+      arrowEnd: true,
+    },
+    {
+      length: width * 0.354,
+      color: textColor,
+      strokeWidth: 0.8,
+      canvas: canvas,
+      x: rectX * 13,
+      y: rectY * 6.2,
+      orientation: 'horizontal',
+      arrowStart: true,
+      arrowEnd: true,
+    },
+    
+    {
+      length: width * 0.376,
+      color: textColor,
+      strokeWidth: 0.8,
+      canvas: canvas,
+      x: rectX * 12,
+      y: rectY * 25,
+      orientation: 'horizontal',
+      arrowStart: true,
+      arrowEnd: true,
+    },
+    // dimension lables 
+    {
+      rectX: rectX * 54.3,
+      rectY: rectY * 13.6,
+      rectWidth: rectWidth * 0.06,
+      rectHeight: height * 0.03,
+      strokeColor: textColor,
+      fillColor: borderColor,
+      strokeWidth: 0.8,
+      text: `${getScreenHeightDimension(selectedConfigurationValues)}"`,
+      textColor: textColor,
+      scaleFactor: 2.3,
+    },
+    {
+      rectX: rectX * 27,
+      rectY: rectY * 4.8,
+      rectWidth: rectWidth * 0.06,
+      rectHeight: height * 0.03,
+      strokeColor: textColor,
+      fillColor: borderColor,
+      strokeWidth: 0.8,
+      text: `${getScreenWidthDimension(selectedConfigurationValues)}"`,
+      textColor: textColor,
+      scaleFactor: 2.3,
+    },
+    {
+      rectX: rectX * 4,
+      rectY: rectY * 13.6,
+      rectWidth: rectWidth * 0.06,
+      rectHeight: height * 0.03,
+      strokeColor: textColor,
+      fillColor: borderColor,
+      strokeWidth: 0.8,
+      text: `${getNicheHeight(selectedConfigurationValues, additionalConfiguration)}"`,
+      textColor: textColor,
+      scaleFactor: 2.3,
+    },
+    {
+      rectX: rectX * 27,
+      rectY: rectY * 25.4,
+      rectWidth: rectWidth * 0.06,
+      rectHeight: height * 0.03,
+      strokeColor: textColor,
+      fillColor: borderColor,
+      strokeWidth: 0.8,
       text: `${getNicheWidth(selectedConfigurationValues, additionalConfiguration)}"`,
       textColor: textColor,
-      scaleFactor: 1.5,
+      scaleFactor: 2.3,
+    }
+    ,
+    {
+      rectX: rectX * 2,
+      rectY: rectY * 16,
+      rectWidth: rectWidth * 0.06,
+      rectHeight: height * 0.03,
+      strokeColor: textColor,
+      fillColor: borderColor,
+      strokeWidth: 0.8,
+      text: `${getScreenDistanceFromFloorLine(additionalConfiguration)}"`,
+      textColor: textColor,
+      scaleFactor: 2.3,
     },
+    {
+      rectX: rectX * 1.1,
+      rectY: rectY * 17.3,
+      rectWidth: rectWidth * 0.06,
+      rectHeight: height * 0.03,
+      strokeWidth: 0.8,
+      text: `Centerline of \n    Display`,
+      textColor: textColor,
+      scaleFactor: 2.3,
+    },
+    {
+      rectX: rectX * 1.8,
+      rectY: rectY * 27,
+      rectWidth: rectWidth * 0.06,
+      rectHeight: height * 0.03,
+      strokeWidth: 0.8,
+      text: `Floor Line`,
+      textColor: textColor,
+      scaleFactor: 2.3,
+    }
+    ,
+    {
+      rectX: rectX * 5.7,
+      rectY: rectY * 17.7,
+      rectWidth: rectWidth * 0.03,
+      rectHeight: height * 0.02,
+      strokeWidth: 0.8,
+      fillColor: "white",
+      text: `≈`,
+      textColor: textColor,
+      scaleFactor: 5,
+    },
+   
   ];
 
   elements.forEach(element => {

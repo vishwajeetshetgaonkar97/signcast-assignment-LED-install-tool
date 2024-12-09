@@ -126,11 +126,11 @@ const FabricCanvas: React.FC<CanvusProps> = ({ fabricCanvasRef }) => {
         angle: orientation === 'horizontal' ? 270 : 0,
         left:
           orientation === 'horizontal'
-            ? x * 0.5
+            ? x - (arrowHeight / 1.2) 
             : x - (arrowHeight / 2.5), 
         top:
           orientation === 'horizontal'
-            ? y * 1.2
+            ? y + (arrowHeight / 1.5)
             : y * 0.99, 
       });
   
@@ -145,12 +145,12 @@ const FabricCanvas: React.FC<CanvusProps> = ({ fabricCanvasRef }) => {
         angle: orientation === 'horizontal' ? 90 : 180, 
         left:
           orientation === 'horizontal'
-            ? x + length * 1.016
+            ? x + length * 1.011
             : x + (arrowHeight / 1.5 ), 
         top:
           orientation === 'horizontal'
-            ? y * 0.855
-            : y + length * 1.02 , 
+            ? y - (arrowHeight / 2)
+            : y + length * 1.01 , 
       });
   
       canvas.add(endArrow);
@@ -342,7 +342,7 @@ const FabricCanvas: React.FC<CanvusProps> = ({ fabricCanvasRef }) => {
 
     createDimensionBoxDiagram({
       fabricCanvasRef,
-      borderColor: infoContainerBorderColor,
+      borderColor: "rgb(0, 0, 0,0.02)",
       headingTextColor,
       highlightFillColor,
       textColor,
