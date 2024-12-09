@@ -1,4 +1,4 @@
-import { scale } from "pdf-lib";
+
 import getDescriptionContainerTitle, { getDate, getDepartmentText, getDrawerName, getNicheDepth, getNicheHeight, getNicheWidth, getRBoxDepth, getRBoxHeight, getRBoxWidth, getScreenDistanceFromFloorLine, getScreenHeightDimension, getScreenSizeText, getScreenWidthDimension } from "./CanvasUtils";
 
 const createScreenDimensionBox = ({
@@ -248,7 +248,6 @@ const createScreenDimensionBox = ({
     fillColor,
     cardTextColor,
     textColor,
-    selectedConfigurationValues,
     additionalConfiguration,
     createDynamicRectangle,
   }) => {
