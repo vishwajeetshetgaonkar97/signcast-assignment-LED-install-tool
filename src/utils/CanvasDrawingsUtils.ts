@@ -1,5 +1,4 @@
-
-import { fill } from "pdf-lib";
+import * as fabric from 'fabric';
 import getDescriptionContainerTitle, { getDate, getDepartmentText, getDrawerName, getIfScreenOrientationVertical, getNicheDepth, getNicheHeight, getNicheWidth, getRBoxDepth, getRBoxHeight, getRBoxWidth, getScreenDistanceFromFloorLine, getScreenHeightDimension, getScreenSizeText, getScreenWidthDimension } from "./CanvasUtils";
 
 const createScreenDimensionBox = ({
@@ -722,6 +721,7 @@ const createDimensionBoxDiagram = ({
       strokeWidth: 0.7,
     },
 
+
     // dotted center lines 
     {
       length: height * 0.75,
@@ -828,7 +828,7 @@ const createDimensionBoxDiagram = ({
 
 
     // screen lines
-    
+
     {
       length: width * 0.03,
       color: textColor,
@@ -850,7 +850,7 @@ const createDimensionBoxDiagram = ({
 
 
 
-// measurement lines 
+    // measurement lines 
 
     {
       length: height * 0.395,
@@ -1014,6 +1014,76 @@ const createDimensionBoxDiagram = ({
     }
   });
 };
+const createMovableDimensionBox = ({
+  fabricCanvasRef,
+  borderColor,
+  headingTextColor,
+  cardBorderColor,
+  fillColor,
+  cardTextColor,
+  textColor,
+  selectedConfigurationValues,
+  additionalConfiguration,
+  createDynamicRectangle,
+}) => {
+  const canvas = fabricCanvasRef.current;
+  if (!canvas) return;
+
+  const width = canvas.getWidth();
+  const height = canvas.getHeight();
+
+  const rectWidth = width * 0.19;
+  const rectHeight = height * 0.24;
+  const rectX = width * 0.795;
+  const rectY = height * 0.03;
+
+  const elements = [
+    {
+      rectX:  rectX * 2.503,
+      rectY:  rectY * 9.3,
+      rectWidth:  rectWidth * 0.3,
+      rectHeight: rectHeight * 0.35,
+      strokeColor: borderColor,
+      strokeWidth: 1,
+      isDotted: true,
+      isDraggable: true,
+    },
+    {
+      rectX:  rectX * 2.51,
+      rectY:  rectY * 9.6,
+      rectWidth:  rectWidth * 0.24,
+      rectHeight: rectHeight * 0.27,
+      strokeColor: borderColor,
+      strokeWidth: 1,
+      isDotted: true,
+      isDraggable: true,
+    },
+  ];
+
+  const rects = elements.map(element => {
+    return new fabric.Rect({
+      left: element.rectX,
+      top: element.rectY,
+      width: element.rectWidth,
+      height: element.rectHeight,
+      stroke: element.strokeColor,
+      strokeWidth: element.strokeWidth,
+      fill: 'transparent',
+      strokeDashArray: [4, 4],
+      selectable: true,
+    });
+  });
+
+  const group = new fabric.Group(rects, {
+    selectable: true,
+    left: width * 0.282,
+    top: height * 0.5,
+  });
+
+  canvas.add(group);
+  canvas.renderAll();
+};
 
 
-export { createScreenDimensionBox, createNicheDimensionBox, createNotesBox, createDescriptionBox, createDimensionBoxDiagram };
+
+export { createScreenDimensionBox, createNicheDimensionBox, createNotesBox, createDescriptionBox, createDimensionBoxDiagram, createMovableDimensionBox };
