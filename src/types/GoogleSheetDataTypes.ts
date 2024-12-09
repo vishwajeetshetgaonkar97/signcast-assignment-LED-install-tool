@@ -18,6 +18,7 @@ export type AdditionalConfiguration = {
   orientation: "vertical" | "horizontal";
   nicheType: "flat wall" | "niche";
   distanceFromFloor: number;
+  nicheVr: number;
   nicheDepth: number;
   rBoxHeight: number;
   rBoxWidth: number;

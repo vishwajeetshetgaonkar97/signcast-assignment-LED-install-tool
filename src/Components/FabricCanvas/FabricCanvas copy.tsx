@@ -13,6 +13,10 @@ const FabricCanvas: React.FC = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const fabricCanvasRef = useRef<fabric.Canvas | null>(null);
 
+  const { selectedConfiguration } = useContext(SelectedConfigurationContext);
+  const { additionalConfiguration } = useContext(AdditionalConfigurationContext);
+
+
   const updateCanvasSize = () => {
     if (containerRef.current && fabricCanvasRef.current) {
       const containerWidth = containerRef.current.offsetWidth;
@@ -45,6 +49,211 @@ const FabricCanvas: React.FC = () => {
     }
   };
 
+  const createDynamicRectangle = ({
+    rectX,
+    rectY,
+    rectWidth,
+    rectHeight,
+    strokeColor = 'transparent',
+    fillColor = 'transparent',
+    strokeWidth = 2,
+    isDotted = false,
+    text = '',
+    textColor = 'transparent',
+    isDraggable = true,
+    fontWeight = 'normal',
+    scaleFactor = 1,
+    textOriginX = 'center',
+    isMultiline = false, // Add a flag to switch between Text and Textbox
+  }: RectangleOptions): fabric.Group => {
+    const rect = new fabric.Rect({
+      left: rectX,
+      top: rectY,
+      width: rectWidth,
+      height: rectHeight,
+      fill: fillColor,
+      stroke: strokeColor,
+      strokeWidth: strokeWidth,
+      strokeDashArray: isDotted ? [5, 5] : [],
+    });
+
+    let textObj;
+
+    if (isMultiline) {
+      // Use fabric.Textbox for multiline text
+      textObj = new fabric.Textbox(String(text), {
+        width: rectWidth, // Set the width for wrapping
+        fontSize: Math.min(rectWidth, rectHeight) * 0.2,
+        fill: textColor,
+        originX: textOriginX,
+        originY: 'center',
+        left: rectX + rectWidth / 2,
+        top: rectY + rectHeight / 2,
+        fontWeight: fontWeight,
+        scaleX: scaleFactor,
+        scaleY: scaleFactor,
+        fontFamily: 'Poppins',
+        textAlign: textOriginX, // Align text based on the originX property
+      });
+    } else {
+      // Use fabric.Text for single-line text
+      textObj = new fabric.Text(String(text), {
+        fontSize: Math.min(rectWidth, rectHeight) * 0.2,
+        fill: textColor,
+        originX: textOriginX,
+        originY: 'center',
+        left: rectX + rectWidth / 2,
+        top: rectY + rectHeight / 2,
+        fontWeight: fontWeight,
+        scaleX: scaleFactor,
+        scaleY: scaleFactor,
+        fontFamily: 'Poppins',
+      });
+    }
+
+    const group = new fabric.Group([rect, textObj], {
+      left: rectX,
+      top: rectY,
+      selectable: true,
+      hasControls: isDraggable,
+      lockMovementX: !isDraggable,
+      lockMovementY: !isDraggable,
+    });
+
+    return group;
+  };
+
+
+  const createScreenDimensionBox = () => {
+    const canvas = fabricCanvasRef.current;
+    if (!canvas) return;
+
+    const width = canvas.getWidth();
+    const height = canvas.getHeight();
+
+    const rectWidth = width * 0.19;
+    const rectHeight = height * 0.24;
+    const rectX = width * 0.795;
+    const rectY = height * 0.03;
+
+    const outerBorder = createDynamicRectangle({
+      rectX,
+      rectY,
+      rectWidth,
+      rectHeight,
+      strokeColor: borderColor,
+      strokeWidth: 1,
+    });
+
+    const headingText = 'Screen Dimensions:';
+    const headingTextContainer = createDynamicRectangle({
+      rectX: rectX * 1.01,
+      rectY: rectY * 1.2,
+      rectWidth: rectWidth * 0.6,
+      rectHeight: height * 0.06,
+      text: headingText,
+      textColor: headingTextColor,
+      scaleFactor: 1.95,
+      fontWeight: '600',
+      textOriginX: 'right',
+    });
+
+    const screenHeightText = 'Height';
+    const screenHeightTextContainer = createDynamicRectangle({
+      rectX: rectX * 1.011,
+      rectY: rectY * 3.2,
+      rectWidth: rectWidth * 0.452,
+      rectHeight: height * 0.04,
+      strokeColor: cardBorderColor,
+      fillColor: fillColor,
+      strokeWidth: 1,
+      text: screenHeightText,
+      textColor: cardTextColor,
+      scaleFactor: 1.9,
+    });
+
+    const screenHeightValue = selectedConfigurationValues.screenMFR ? selectedConfigurationValues.screenMFR.Height : '0';
+    const screenHeightValueContainer = createDynamicRectangle({
+      rectX: rectX * 1.12,
+      rectY: rectY * 3.2,
+      rectWidth: rectWidth * 0.452,
+      rectHeight: height * 0.04,
+      strokeColor: cardBorderColor,
+      strokeWidth: 1,
+      text: screenHeightValue,
+      textColor: textColor,
+      scaleFactor: 1.9,
+    });
+
+
+    const screenWidthText = 'Width';
+    const screenWidthTextContainer = createDynamicRectangle({
+      rectX: rectX * 1.011,
+      rectY: rectY * 5,
+      rectWidth: rectWidth * 0.452,
+      rectHeight: height * 0.04,
+      strokeColor: cardBorderColor,
+      fillColor: fillColor,
+      strokeWidth: 1,
+      text: screenWidthText,
+      textColor: cardTextColor,
+      scaleFactor: 1.9,
+    });
+
+    const screenWidthValue = selectedConfigurationValues.screenMFR ? selectedConfigurationValues.screenMFR.Width : '0';
+    const screenWidthValueContainer = createDynamicRectangle({
+      rectX: rectX * 1.12,
+      rectY: rectY * 5,
+      rectWidth: rectWidth * 0.452,
+      rectHeight: height * 0.04,
+      strokeColor: cardBorderColor,
+      strokeWidth: 1,
+      text: screenWidthValue,
+      textColor: textColor,
+      scaleFactor: 1.9,
+    });
+
+    const floorLineText = 'Floor Line';
+    const floorLineTextContainer = createDynamicRectangle({
+      rectX: rectX * 1.011,
+      rectY: rectY * 6.8,
+      rectWidth: rectWidth * 0.452,
+      rectHeight: height * 0.04,
+      strokeColor: cardBorderColor,
+      fillColor: fillColor,
+      strokeWidth: 1,
+      text: floorLineText,
+      textColor: cardTextColor,
+      scaleFactor: 1.9,
+      fontWeight: 'normal'
+    });
+
+    const floorLineValue = additionalConfiguration.distanceFromFloor ? additionalConfiguration.distanceFromFloor : '0';
+    const floorLineValueContainer = createDynamicRectangle({
+      rectX: rectX * 1.12,
+      rectY: rectY * 6.8,
+      rectWidth: rectWidth * 0.45,
+      rectHeight: height * 0.04,
+      strokeColor: cardBorderColor,
+      strokeWidth: 1,
+      text: floorLineValue,
+      textColor: textColor,
+      scaleFactor: 1.9,
+      fontWeight: 'normal'
+    });
+
+
+    canvas.add(outerBorder);
+    canvas.add(headingTextContainer);
+    canvas.add(screenHeightTextContainer);
+    canvas.add(screenHeightValueContainer);
+    canvas.add(screenWidthTextContainer);
+    canvas.add(screenWidthValueContainer);
+    canvas.add(floorLineTextContainer);
+    canvas.add(floorLineValueContainer);
+
+  };
+
   useEffect(() => {
     // Initialize Fabric.js canvas
     if (canvasRef.current) {
@@ -54,7 +263,7 @@ const FabricCanvas: React.FC = () => {
         backgroundColor: 'lightblue',
       });
       fabricCanvasRef.current = fabricCanvas;
-
+      createScreenDimensionBox();
       // Add example objects
       const rect = new fabric.Rect({
         left: 100,

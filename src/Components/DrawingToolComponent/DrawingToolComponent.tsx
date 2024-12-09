@@ -35,6 +35,7 @@ const DrawingToolComponent = () => {
     orientation: "vertical",
     nicheType: "flat wall",
     distanceFromFloor: 0,
+    nicheVr: 0,
     nicheDepth: 0,
     rBoxHeight: 6.6,
     rBoxWidth: 6.012,

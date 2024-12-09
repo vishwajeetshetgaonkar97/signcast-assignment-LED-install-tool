@@ -29,7 +29,8 @@ const ConfigurationComponent = () => {
     orientation: additionalConfiguration?.orientation || "horizontal",
     nicheType: additionalConfiguration?.nicheType || "flat wall",
     distanceFromFloor: additionalConfiguration?.distanceFromFloor || 50,
-    nicheDepth: additionalConfiguration?.nicheDepth || 0,
+    nicheVr: additionalConfiguration?.nicheVr || 1.5,
+    nicheDepth: additionalConfiguration?.nicheDepth || 0.5,
     rBoxHeight: additionalConfiguration?.rBoxHeight || 6.6,
     rBoxWidth: additionalConfiguration?.rBoxWidth || 6.012,
     rBoxDepth: additionalConfiguration?.rBoxDepth || 3.75
@@ -72,7 +73,7 @@ const ConfigurationComponent = () => {
   };
 
   console.log("Selected Configuration:", selectedConfiguration);
-  console.log("Additional Configuration:", additionalConfiguration);
+  console.log("Additional Configuration: 1234", additionalConfiguration);
   console.log("Selected Values:", selectedValues);
 
   return (
@@ -222,21 +223,43 @@ const ConfigurationComponent = () => {
         />
       </div>
 
-      <div className="flex align-center gap-0 pt-1 ">
-        <label
-          htmlFor="nicheDepth"
-          className="flex content-center items-center justify-center mb-1 text-xs font-small text-text-color opacity-50 border border-border-color bg-border-color text-card-text-color w-1/2 h-9 px-1 text-center"
-        >
-          Niche Depth Vr.
-        </label>
-        <input
-          type="number"
-          id="nicheDepth"
-          value={additionalConfig.nicheDepth}
-          onChange={(e) => handleAdditionalConfigChange("nicheDepth", e.target.value)}
-          className="border bg-card-color border-border-color text-card-text-color text-xs focus:ring-blue-500 focus:border-blue-500 block w-1/2 h-9 p-1.5 text-center"
-        />
-      </div>
+      {additionalConfig && additionalConfig.nicheType === "niche" && <>
+
+        <div className="flex align-center gap-0 pt-1 ">
+          <label
+            htmlFor="nicheDepth"
+            className="flex content-center items-center justify-center mb-1 text-xs font-Small text-text-color opacity-50 border border-border-color bg-border-color text-card-text-color w-1/2 h-9 px-1 text-center"
+          >
+            Niche Vr.
+          </label>
+          <input
+            type="number"
+            id="nicheVr"
+            value={additionalConfig.nicheVr}
+            onChange={(e) => handleAdditionalConfigChange("nicheVr", e.target.value)}
+            className="border bg-card-color border-border-color text-card-text-color text-xs focus:ring-blue-500 focus:border-blue-500 block w-1/2 h-9 p-1.5 text-center"
+          />
+        </div>
+
+
+        <div className="flex align-center gap-0 pt-1 ">
+          <label
+            htmlFor="nicheDepth"
+            className="flex content-center items-center justify-center mb-1 text-xs font-Small text-text-color opacity-50 border border-border-color bg-border-color text-card-text-color w-1/2 h-9 px-1 text-center"
+          >
+            Niche Depth Vr.
+          </label>
+          <input
+            type="number"
+            id="nicheDepth"
+            value={additionalConfig.nicheDepth}
+            onChange={(e) => handleAdditionalConfigChange("nicheDepth", e.target.value)}
+            className="border bg-card-color border-border-color text-card-text-color text-xs focus:ring-blue-500 focus:border-blue-500 block w-1/2 h-9 p-1.5 text-center"
+          />
+        </div>
+      </>}
+
+
       <div className="flex align-center flex-col gap-0 pt-2">
         <label
           htmlFor="mount"

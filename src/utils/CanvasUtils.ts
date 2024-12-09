@@ -1,3 +1,27 @@
+
+const getScreenHeightDimension = (selectedConfigurationValues: any) => {
+    if (!selectedConfigurationValues.screenMFR) return 0;
+    return parseFloat(selectedConfigurationValues.screenMFR?.Height || 0);
+}
+
+const getScreenWidthDimension = (selectedConfigurationValues: any) => {
+    if (!selectedConfigurationValues.screenMFR) return 0;
+    return parseFloat(selectedConfigurationValues.screenMFR.Width || 0)
+}
+
+const getScreenDistanceFromFloorLine = (additionalConfiguration: any) => {
+    if (!additionalConfiguration.distanceFromFloor) return 0;
+    return parseFloat( additionalConfiguration.distanceFromFloor || 0)
+}
+
+const getNicheHeight = (selectedConfigurationValues: any, additionalConfiguration: any) => {
+    const screenHeightDimension = getScreenHeightDimension(selectedConfigurationValues); 
+     const nicheVr =  parseFloat(additionalConfiguration.nicheVr || 0); 
+     const nicheHeight = screenHeightDimension + nicheVr; 
+     return nicheHeight;
+    
+}
+
 const getDescriptionContainerTitle = (descriptionConfiguration: any) => {
 
     if (descriptionConfiguration && descriptionConfiguration.title) {
@@ -71,4 +95,7 @@ const getRBoxDepth = (additionalConfiguration: any) => {
 }
 
 export default getDescriptionContainerTitle
-export { getDescriptionContainerTitle, getDrawerName, getDate, getScreenSizeText, getDepartmentText,getRBoxHeight ,getRBoxWidth, getRBoxDepth}
+export { getDescriptionContainerTitle, getDrawerName, getDate, 
+    getScreenSizeText, getDepartmentText, getRBoxHeight, getRBoxWidth, getRBoxDepth, 
+    getScreenHeightDimension,getScreenWidthDimension ,getScreenDistanceFromFloorLine, getNicheHeight
+}
