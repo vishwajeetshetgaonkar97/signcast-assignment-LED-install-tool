@@ -3,7 +3,7 @@ import DescripotionDataContext from "../../Contexts/DescripotionDataContext";
 
 const DescriptionConfigComponent = () => {
   const { descriptionConfiguration, setDescriptionConfiguration } = useContext(DescripotionDataContext);
-  
+
   // Default values initialization
   const [descriptionValues, setDescriptionValues] = useState({
     title: descriptionConfiguration?.title || "",
@@ -13,17 +13,28 @@ const DescriptionConfigComponent = () => {
     date: descriptionConfiguration?.date || "",
   });
 
-  // Handle form value changes
+  // Function to format date in DD/MM/YYYY
+  const formatDate = (date) => {
+    const [year, month, day] = date.split("-");
+    return `${day}/${month}/${year}`;
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    let formattedValue = value;
+    if (name === "date") {
+      formattedValue = formatDate(value);
+    }
+
     setDescriptionValues((prevValues) => ({
       ...prevValues,
-      [name]: value,
+      [name]: formattedValue,
     }));
 
     const updatedDescriptionConfig = {
       ...descriptionConfiguration,
-      [name]: value,
+      [name]: formattedValue,
     };
     setDescriptionConfiguration(updatedDescriptionConfig);
   };
@@ -31,14 +42,14 @@ const DescriptionConfigComponent = () => {
   console.log(descriptionConfiguration);
   return (
     <form className="h-max px-4 py-3 space-y-0 border border-border-color">
-        <h4 className="font-semibold text-sm pb-2 opacity-80 ">Description</h4>
+      <h4 className="font-semibold text-sm pb-2 opacity-80">Description</h4>
       <div className="pb-2">
-      <label
-            htmlFor="title"
-            className="block mb-1 text-xs font-small text-text-color opacity-50"
-          >
-            Title
-          </label>
+        <label
+          htmlFor="title"
+          className="block mb-1 text-xs font-small text-text-color opacity-50"
+        >
+          Title
+        </label>
         <input
           type="text"
           id="title"
@@ -99,13 +110,11 @@ const DescriptionConfigComponent = () => {
           type="date"
           id="date"
           name="date"
-          
-          value={descriptionValues.date}
+          value={descriptionValues.date.split("/").reverse().join("-")}
           onChange={handleChange}
           className="border bg-card-color border-border-color text-card-text-color text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
         />
       </div>
-
     </form>
   );
 };

@@ -53,6 +53,8 @@ const DrawingToolComponent = () => {
     date: new Date().toLocaleDateString('en-GB').split('/').join('/'),
   });
 
+  const isLoading = !selectedConfiguration || !selectedConfiguration.screenMFR;
+
 
   const fetchDatabaseData = async () => {
     try {
@@ -107,8 +109,20 @@ const DrawingToolComponent = () => {
     [descriptionConfiguration, setDescriptionConfiguration]
   );
 
+  
   return (
     <>
+      <div className={` ${isLoading ? 'show absolute top-0 left-0 h-full w-full flex items-center justify-center bg-bg-color z-50' : 'hidden'}`}>
+        <div
+          className="inline-block h-10 w-10 text-orange-600 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite]"
+          role="status">
+          <span
+            className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
+          >Loading...</span
+          >
+        </div>
+
+      </div>
       <ScreenMFRDataContext.Provider value={ScreenMFRDataContextValue}>
         <MediaPlayerMFRDataContext.Provider value={MediaPlayerMFRDataContextValue}>
           <MountsDataContext.Provider value={MountsDataContextValue}>

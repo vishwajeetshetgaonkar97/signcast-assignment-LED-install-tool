@@ -12,38 +12,38 @@ const getScreenWidthDimension = (selectedConfigurationValues: any) => {
 
 const getScreenDistanceFromFloorLine = (additionalConfiguration: any) => {
     if (!additionalConfiguration.distanceFromFloor) return 0;
-    return parseFloat( additionalConfiguration.distanceFromFloor || 0)
+    return parseFloat(additionalConfiguration.distanceFromFloor || 0)
 }
 
 const getNicheHeight = (selectedConfigurationValues: any, additionalConfiguration: any) => {
-    const screenHeightDimension = getScreenHeightDimension(selectedConfigurationValues); 
-     const nicheVr =  parseFloat(additionalConfiguration.nicheVr || 0); 
-     const nicheHeight = screenHeightDimension + nicheVr; 
-     return nicheHeight;
-    
+    const screenHeightDimension = getScreenHeightDimension(selectedConfigurationValues);
+    const nicheVr = parseFloat(additionalConfiguration.nicheVr || 0);
+    const nicheHeight = screenHeightDimension + nicheVr;
+    return nicheHeight;
+
 }
 const getNicheWidth = (selectedConfigurationValues: any, additionalConfiguration: any) => {
-    const screenHeightDimension = getScreenWidthDimension(selectedConfigurationValues); 
-     const nicheVr =  parseFloat(additionalConfiguration.nicheVr || 0); 
-     const nicheWidth = screenHeightDimension + nicheVr; 
-     return nicheWidth;
-    
+    const screenHeightDimension = getScreenWidthDimension(selectedConfigurationValues);
+    const nicheVr = parseFloat(additionalConfiguration.nicheVr || 0);
+    const nicheWidth = screenHeightDimension + nicheVr;
+    return nicheWidth;
+
 }
 const getNicheDepth = (selectedConfigurationValues: any, additionalConfiguration: any) => {
     if (!selectedConfigurationValues || !additionalConfiguration || !selectedConfigurationValues.screenMFR) {
-      return 0;
+        return 0;
     }
-  
+
     const screenDepth = parseFloat(selectedConfigurationValues.screenMFR?.Depth ?? '0');
     const depthVariance = parseFloat(additionalConfiguration.nicheDepth ?? '0');
     const mediaPlayerDepth = selectedConfigurationValues.MediaPlayerMFR ? parseFloat(selectedConfigurationValues.MediaPlayerMFR.Depth ?? '0') : 0;
     const mountDepth = selectedConfigurationValues.mount ? parseFloat(selectedConfigurationValues.mount["Depth (in)"] ?? '0') : 0;
-  
+
     const additionalFactor = Math.max(mediaPlayerDepth, mountDepth);
-  
-    return screenDepth + depthVariance + additionalFactor;
-  };
-  
+
+    return (screenDepth + depthVariance + additionalFactor).toFixed(2);
+};
+
 
 const getDescriptionContainerTitle = (descriptionConfiguration: any) => {
 
@@ -119,35 +119,36 @@ const getRBoxDepth = (additionalConfiguration: any) => {
 
 const downloadCanvasAsPdf = (canvas) => {
     if (!canvas) return;
-  
+
     // Create a temporary canvas to draw the high-resolution image
     const tempCanvas = document.createElement('canvas');
     const tempContext = tempCanvas.getContext('2d');
     const scaleFactor = 3;
     const width = canvas.getWidth() * scaleFactor;
     const height = canvas.getHeight() * scaleFactor;
-  
+
     tempCanvas.width = width;
     tempCanvas.height = height;
-  
+
     tempContext.scale(scaleFactor, scaleFactor);
-  
+
     tempContext.drawImage(canvas.getElement(), 0, 0, canvas.getWidth(), canvas.getHeight());
-  
+
     const imgData = tempCanvas.toDataURL('image/png');
-  
+
     // Using jsPDF to create a PDF and add the image
     const pdf = new jsPDF('landscape', 'px', [width, height]);
     pdf.addImage(imgData, 'PNG', 0, 0, width, height);
     pdf.save('high_quality_canvas.pdf');
-  };
-  
-  // Make sure to include the jsPDF library in your HTML file
-  // <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
-  
+};
+
+// Make sure to include the jsPDF library in your HTML file
+// <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+
 
 export default getDescriptionContainerTitle
-export { getDescriptionContainerTitle, getDrawerName, getDate, 
-    getScreenSizeText, getDepartmentText, getRBoxHeight, getRBoxWidth, getRBoxDepth, 
-    getScreenHeightDimension,getScreenWidthDimension ,getScreenDistanceFromFloorLine, getNicheHeight,getNicheWidth,getNicheDepth, downloadCanvasAsPdf
+export {
+    getDescriptionContainerTitle, getDrawerName, getDate,
+    getScreenSizeText, getDepartmentText, getRBoxHeight, getRBoxWidth, getRBoxDepth,
+    getScreenHeightDimension, getScreenWidthDimension, getScreenDistanceFromFloorLine, getNicheHeight, getNicheWidth, getNicheDepth, downloadCanvasAsPdf
 }

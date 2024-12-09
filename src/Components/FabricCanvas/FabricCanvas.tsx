@@ -4,7 +4,6 @@ import SelectedConfigurationContext from '../../Contexts/SelectedConfigurationCo
 import AdditionalConfigurationContext from '../../Contexts/AdditionalConfigurationContext';
 import DescripotionDataContext from '../../Contexts/DescripotionDataContext';
 import { createDescriptionBox, createNicheDimensionBox, createNotesBox, createScreenDimensionBox } from '../../utils/CanvasDrawingsUtils';
-import { downloadCanvasAsPdf } from '../../utils/CanvasUtils';
 
 interface CanvusProps {
   fabricCanvasRef: React.MutableRefObject<fabric.Canvas>;
@@ -98,64 +97,65 @@ const FabricCanvas: React.FC <CanvusProps>= ({fabricCanvasRef}) => {
   };
 
 
-  // Function to create the outer border with text and draggable optionconst createDynamicRectangle = ({
-  const createDynamicRectangle = ({
-    rectX,
-    rectY,
-    rectWidth,
-    rectHeight,
-    strokeColor = 'transparent',
-    fillColor = 'transparent',
-    strokeWidth = 2,
-    isDotted = false,
-    text = '',
-    textColor = 'transparent',
-    isDraggable = false,
-    fontWeight = 'normal',
-    scaleFactor = 1,
-    textOriginX = 'center',
-    isMultiline = false,
-  }: RectangleOptions): fabric.Group => {
-
-    const rect = new fabric.Rect({
-      left: rectX,
-      top: rectY,
-      width: rectWidth,
-      height: rectHeight,
-      fill: fillColor,
-      stroke: strokeColor,
-      strokeWidth: strokeWidth,
-      strokeDashArray: isDotted ? [5, 5] : [],
-    });
-
-    const textOptions = {
-      fontSize: Math.min(rectWidth, rectHeight) * 0.2,
-      fill: textColor,
-      originX: textOriginX as 'left' | 'center' | 'right',
-      originY: 'center' as fabric.TOriginY,
-      left: rectX + rectWidth / 2,
-      top: rectY + rectHeight / 2,
-      fontWeight: fontWeight,
-      scaleX: scaleFactor,
-      scaleY: scaleFactor,
-      fontFamily: 'Poppins',
+  // Function to create customized rectangles based on the provided options
+    const createDynamicRectangle = ({
+      rectX,
+      rectY,
+      rectWidth,
+      rectHeight,
+      strokeColor = 'transparent',
+      fillColor = 'transparent',
+      strokeWidth = 2,
+      isDotted = false,
+      text = '',
+      textColor = 'transparent',
+      isDraggable = false,
+      fontWeight = 'normal',
+      scaleFactor = 1,
+      textOriginX = 'center',
+      isMultiline = false,
+    }: RectangleOptions): fabric.Group => {
+  
+      const rect = new fabric.Rect({
+        left: rectX,
+        top: rectY,
+        width: rectWidth,
+        height: rectHeight,
+        fill: fillColor,
+        stroke: strokeColor,
+        strokeWidth: strokeWidth,
+        strokeDashArray: isDotted ? [5, 5] : [],
+      });
+  
+      const textOptions = {
+        fontSize: Math.min(rectWidth, rectHeight) * 0.2,
+        fill: textColor,
+        originX: textOriginX as 'left' | 'center' | 'right',
+        originY: 'center' as fabric.TOriginY,
+        left: rectX + rectWidth / 2,
+        top: rectY + rectHeight / 2,
+        fontWeight: fontWeight,
+        scaleX: scaleFactor,
+        scaleY: scaleFactor,
+        fontFamily: 'Poppins',
+      };
+  
+      const textObj = isMultiline
+        ? new fabric.Textbox(String(text).replace(/\\n/g, '\n'), { ...textOptions, width: rectWidth, textAlign: textOriginX })
+        : new fabric.Text(String(text), textOptions);
+  
+      const group = new fabric.Group([rect, textObj], {
+        left: rectX,
+        top: rectY,
+        selectable: true,
+        hasControls: isDraggable,
+        lockMovementX: !isDraggable,
+        lockMovementY: !isDraggable,
+      });
+  
+      return group;
     };
-
-    const textObj = isMultiline
-      ? new fabric.Textbox(String(text), { ...textOptions, width: rectWidth, textAlign: textOriginX })
-      : new fabric.Text(String(text), textOptions);
-
-    const group = new fabric.Group([rect, textObj], {
-      left: rectX,
-      top: rectY,
-      selectable: true,
-      hasControls: isDraggable,
-      lockMovementX: !isDraggable,
-      lockMovementY: !isDraggable,
-    });
-
-    return group;
-  };
+  
 
 
 
@@ -271,7 +271,7 @@ const FabricCanvas: React.FC <CanvusProps>= ({fabricCanvasRef}) => {
         ref={canvasRef}
         className='border border-border-color h-full w-full'
       />
-      
+
     </div>
   );
 };

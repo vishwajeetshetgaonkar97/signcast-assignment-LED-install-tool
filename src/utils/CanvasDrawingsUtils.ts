@@ -511,11 +511,11 @@ const createScreenDimensionBox = ({
         fontWeight: '500',
       },
       {
-        rectX: rectX * 1.3,
-        rectY: rectY * 1.32,
+        rectX: rectX * 1.31,
+        rectY: rectY * 1.345,
         imageUrl: "./distance.png",
         isImage: true,
-        scaleFactor: 0.45,
+        scaleFactor: 0.5,
       },
       {
         rectX: rectX * 1.015,
