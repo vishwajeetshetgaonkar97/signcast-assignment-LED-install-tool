@@ -1,5 +1,5 @@
 import { scale } from "pdf-lib";
-import getDescriptionContainerTitle, { getDate, getDepartmentText, getDrawerName, getNicheHeight, getRBoxDepth, getRBoxHeight, getRBoxWidth, getScreenDistanceFromFloorLine, getScreenHeightDimension, getScreenSizeText, getScreenWidthDimension } from "./CanvasUtils";
+import getDescriptionContainerTitle, { getDate, getDepartmentText, getDrawerName, getNicheDepth, getNicheHeight, getNicheWidth, getRBoxDepth, getRBoxHeight, getRBoxWidth, getScreenDistanceFromFloorLine, getScreenHeightDimension, getScreenSizeText, getScreenWidthDimension } from "./CanvasUtils";
 
 const createScreenDimensionBox = ({
     fabricCanvasRef,
@@ -206,7 +206,7 @@ const createScreenDimensionBox = ({
         rectHeight: height * 0.04,
         strokeColor: cardBorderColor,
         strokeWidth: 1,
-        text: selectedConfigurationValues.screenMFR ? selectedConfigurationValues.screenMFR.Width : '0',
+        text: getNicheWidth(selectedConfigurationValues, additionalConfiguration),
         textColor: textColor,
         scaleFactor: 1.9,
       },
@@ -230,7 +230,7 @@ const createScreenDimensionBox = ({
         rectHeight: height * 0.04,
         strokeColor: cardBorderColor,
         strokeWidth: 1,
-        text: getScreenDistanceFromFloorLine(additionalConfiguration),
+        text: getNicheDepth(selectedConfigurationValues, additionalConfiguration ),
         textColor: textColor,
         scaleFactor: 1.9,
         fontWeight: 'normal',
@@ -424,9 +424,8 @@ const createScreenDimensionBox = ({
         rectX: rectX * 1.01,
         rectY: rectY * 1.2,
         imageUrl: "./logo.png",
-        imageScaleX: 1,
-        imageScaleY: 1,
         isImage: true,
+        scaleFactor: 0.45,
       },
       {
         rectX: rectX * 1.12,
@@ -494,11 +493,30 @@ const createScreenDimensionBox = ({
         strokeColor: borderColor,
         fillColor: highlightFillColor,
         strokeWidth: 1,
-        text: '  Dimensions in inches',
+        text: 'Dimensions in inches',
         textColor: textColor,
         scaleFactor: 1,
         fontWeight: '500',
         isMultiline: true,
+        textOriginX: 'center',
+      },
+      {
+        rectX: rectX * 1.302,
+        rectY: rectY * 1.14,
+        rectWidth: rectWidth * 0.22,
+        rectHeight: height * 0.072,
+        strokeColor: borderColor,
+        strokeWidth: 1,
+        textColor: textColor,
+        scaleFactor: 1.8,
+        fontWeight: '500',
+      },
+      {
+        rectX: rectX * 1.3,
+        rectY: rectY * 1.32,
+        imageUrl: "./distance.png",
+        isImage: true,
+        scaleFactor: 0.45,
       },
       {
         rectX: rectX * 1.015,
@@ -630,9 +648,7 @@ const createScreenDimensionBox = ({
       if (element.isImage) {
         addImageToCanvas({
           imageUrl: element.imageUrl,
-          imageX: 0,
-          imageY: 0,
-          scaleFactor: 0.45,
+          scaleFactor: element.scaleFactor || 1,
           canvas: canvas,
           imageLeft: element.rectX * 1.02,
           imageTop: element.rectY * 0.865,

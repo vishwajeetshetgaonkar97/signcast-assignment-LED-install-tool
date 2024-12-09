@@ -21,6 +21,28 @@ const getNicheHeight = (selectedConfigurationValues: any, additionalConfiguratio
      return nicheHeight;
     
 }
+const getNicheWidth = (selectedConfigurationValues: any, additionalConfiguration: any) => {
+    const screenHeightDimension = getScreenWidthDimension(selectedConfigurationValues); 
+     const nicheVr =  parseFloat(additionalConfiguration.nicheVr || 0); 
+     const nicheWidth = screenHeightDimension + nicheVr; 
+     return nicheWidth;
+    
+}
+const getNicheDepth = (selectedConfigurationValues: any, additionalConfiguration: any) => {
+    if (!selectedConfigurationValues || !additionalConfiguration || !selectedConfigurationValues.screenMFR) {
+      return 0;
+    }
+  
+    const screenDepth = parseFloat(selectedConfigurationValues.screenMFR?.Depth ?? '0');
+    const depthVariance = parseFloat(additionalConfiguration.nicheDepth ?? '0');
+    const mediaPlayerDepth = selectedConfigurationValues.MediaPlayerMFR ? parseFloat(selectedConfigurationValues.MediaPlayerMFR.Depth ?? '0') : 0;
+    const mountDepth = selectedConfigurationValues.mount ? parseFloat(selectedConfigurationValues.mount["Depth (in)"] ?? '0') : 0;
+  
+    const additionalFactor = Math.max(mediaPlayerDepth, mountDepth);
+  
+    return screenDepth + depthVariance + additionalFactor;
+  };
+  
 
 const getDescriptionContainerTitle = (descriptionConfiguration: any) => {
 
@@ -97,5 +119,5 @@ const getRBoxDepth = (additionalConfiguration: any) => {
 export default getDescriptionContainerTitle
 export { getDescriptionContainerTitle, getDrawerName, getDate, 
     getScreenSizeText, getDepartmentText, getRBoxHeight, getRBoxWidth, getRBoxDepth, 
-    getScreenHeightDimension,getScreenWidthDimension ,getScreenDistanceFromFloorLine, getNicheHeight
+    getScreenHeightDimension,getScreenWidthDimension ,getScreenDistanceFromFloorLine, getNicheHeight,getNicheWidth,getNicheDepth
 }

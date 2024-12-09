@@ -70,48 +70,7 @@ const FabricCanvas: React.FC = () => {
     isMultiline?: boolean;
   }
 
-  const createDynamicImage = async ({
-    imageX,
-    imageY,
-    imageWidth,
-    imageHeight,
-    imageUrl,
-    isDraggable = true,
-  }: {
-    imageX: number;
-    imageY: number;
-    imageWidth: number;
-    imageHeight: number;
-    imageUrl: string;
-    isDraggable?: boolean;
-  }): Promise<fabric.Image> => {
-    // Load the image
-    return new Promise((resolve, reject) => {
-      fabric.Image.fromURL(
-        imageUrl,
-        (img) => {
-          // Set image properties
-          img.set({
-            left: imageX,
-            top: imageY,
-            width: imageWidth,
-            height: imageHeight,
-            scaleX: imageWidth / img.width!,
-            scaleY: imageHeight / img.height!,
-            selectable: isDraggable,
-            lockMovementX: !isDraggable,
-            lockMovementY: !isDraggable,
-            hasControls: isDraggable,
-          });
 
-          resolve(img);
-        },
-        {
-          crossOrigin: 'Anonymous', // For cross-origin images
-        }
-      );
-    });
-  };
   const addImageToCanvas = ({
     imageUrl,
     imageX = 0,
@@ -122,7 +81,7 @@ const FabricCanvas: React.FC = () => {
     canvas,
   }) => {
     if (!canvas) return;
-  
+
     const imgElement = new Image();
     imgElement.onload = () => {
       const imgInstance = new fabric.Image(imgElement, {
@@ -136,8 +95,8 @@ const FabricCanvas: React.FC = () => {
     };
     imgElement.src = imageUrl;
   };
-  
-  
+
+
   // Function to create the outer border with text and draggable optionconst createDynamicRectangle = ({
   const createDynamicRectangle = ({
     rectX,
@@ -171,7 +130,7 @@ const FabricCanvas: React.FC = () => {
     const textOptions = {
       fontSize: Math.min(rectWidth, rectHeight) * 0.2,
       fill: textColor,
-      originX: textOriginX as 'left' | 'center' | 'right', // Explicitly type-cast
+      originX: textOriginX as 'left' | 'center' | 'right',
       originY: 'center',
       left: rectX + rectWidth / 2,
       top: rectY + rectHeight / 2,
@@ -240,53 +199,53 @@ const FabricCanvas: React.FC = () => {
 
       fabric.Text.prototype.fontFamily = 'Poppins';
       createScreenDimensionBox({
-        fabricCanvasRef: fabricCanvasRef,
-        borderColor: borderColor,
-        headingTextColor: headingTextColor,
-        cardBorderColor: cardBorderColor,
-        fillColor: fillColor,
-        cardTextColor: cardTextColor,
-        textColor: textColor,
-        selectedConfigurationValues: selectedConfigurationValues,
-        additionalConfiguration: additionalConfiguration,
-        createDynamicRectangle: createDynamicRectangle,
+        fabricCanvasRef,
+        borderColor,
+        headingTextColor,
+        cardBorderColor,
+        fillColor,
+        cardTextColor,
+        textColor,
+        selectedConfigurationValues,
+        additionalConfiguration,
+        createDynamicRectangle,
       })
 
       createNicheDimensionBox({
-        fabricCanvasRef: fabricCanvasRef,
-        borderColor: borderColor,
-        headingTextColor: headingTextColor,
-        cardBorderColor: cardBorderColor,
-        fillColor: fillColor,
-        cardTextColor: cardTextColor,
-        textColor: textColor,
-        selectedConfigurationValues: selectedConfigurationValues,
-        additionalConfiguration: additionalConfiguration,
-        createDynamicRectangle: createDynamicRectangle,
+        fabricCanvasRef,
+        borderColor,
+        headingTextColor,
+        cardBorderColor,
+        fillColor,
+        cardTextColor,
+        textColor,
+        selectedConfigurationValues,
+        additionalConfiguration,
+        createDynamicRectangle,
       });
 
       createDescriptionBox({
-        fabricCanvasRef: fabricCanvasRef,
+        fabricCanvasRef,
         borderColor: infoContainerBorderColor,
-        headingTextColor: headingTextColor,
-        highlightFillColor: highlightFillColor,
-        textColor: textColor,
-        descriptionConfiguration:descriptionConfiguration,
-        createDynamicRectangle: createDynamicRectangle,
-        addImageToCanvas: addImageToCanvas,
+        headingTextColor,
+        highlightFillColor,
+        textColor,
+        descriptionConfiguration,
+        createDynamicRectangle,
+        addImageToCanvas,
       });
 
       createNotesBox({
-        fabricCanvasRef: fabricCanvasRef,
-        borderColor: borderColor,
-        headingTextColor: headingTextColor,
-        cardBorderColor: cardBorderColor,
-        fillColor: fillColor,
-        cardTextColor: cardTextColor,
-        textColor: textColor,
-        selectedConfigurationValues: selectedConfigurationValues,
-        additionalConfiguration: additionalConfiguration,
-        createDynamicRectangle: createDynamicRectangle,
+        fabricCanvasRef,
+        borderColor,
+        headingTextColor,
+        cardBorderColor,
+        fillColor,
+        cardTextColor,
+        textColor,
+        selectedConfigurationValues,
+        additionalConfiguration,
+        createDynamicRectangle,
       });
     }
 
