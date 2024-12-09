@@ -1,14 +1,11 @@
 import React, { useRef, useEffect, useState, useContext } from 'react';
 import * as fabric from 'fabric';
-import ScreenMFRDataContext from '../../Contexts/ScreenMFRDataContext';
 import SelectedConfigurationContext from '../../Contexts/SelectedConfigurationContext';
 import AdditionalConfigurationContext from '../../Contexts/AdditionalConfigurationContext';
-import { getDate, getDepartmentText, getDescriptionContainerTitle, getDrawerName, getNicheHeight, getRBoxDepth, getRBoxHeight, getRBoxWidth, getScreenDistanceFromFloorLine, getScreenHeightDimension, getScreenSizeText, getScreenWidthDimension } from '../../utils/CanvasUtils'
 import DescripotionDataContext from '../../Contexts/DescripotionDataContext';
 import { createDescriptionBox, createNicheDimensionBox, createNotesBox, createScreenDimensionBox } from '../../utils/CanvasDrawingsUtils';
 
 const FabricCanvas: React.FC = () => {
-  const { screenMFRData } = useContext(ScreenMFRDataContext);
   const { selectedConfiguration } = useContext(SelectedConfigurationContext);
   const { additionalConfiguration } = useContext(AdditionalConfigurationContext);
   const { descriptionConfiguration } = useContext(DescripotionDataContext);
