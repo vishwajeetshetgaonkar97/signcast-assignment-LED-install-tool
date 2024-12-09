@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import FabricCanvas from "../FabricCanvas/FabricCanvas";
 import ConfigurationSectionComponent from "../ConfigurationSectionComponent/ConfigurationSectionComponent";
 import { fetchGoogleSheetData } from "./../../api/fetchGoogleSheetData";
