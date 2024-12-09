@@ -668,6 +668,8 @@ const createDimensionBoxDiagram = ({
   createDynamicRectangle,
   addImageToCanvas,
   addLineToCanvas,
+  selectedConfigurationValues,
+  additionalConfiguration,
 }) => {
   const canvas = fabricCanvasRef.current;
   if (!canvas) return;
@@ -790,8 +792,77 @@ const createDimensionBoxDiagram = ({
       x: rectX * 50.7,
       y: rectY * 21.4,
       orientation: 'horizontal',
-    }
-    
+    },
+    {
+      length: width * 0.03,
+      color: textColor,
+      strokeWidth: 1,
+      canvas: canvas,
+      x: rectX * 49,
+      y: rectY * 6.2,
+      orientation: 'verical',
+    },
+    {
+      length: width * 0.05,
+      color: textColor,
+      strokeWidth: 1,
+      canvas: canvas,
+      x: rectX * 50.3,
+      y: rectY * 22.4,
+      orientation: 'vertical',
+    },
+    {
+      length: width * 0.03,
+      color: textColor,
+      strokeWidth: 1,
+      canvas: canvas,
+      x: rectX * 12.6,
+      y: rectY * 6.2,
+      orientation: 'verical',
+    },
+    {
+      length: width * 0.05,
+      color: textColor,
+      strokeWidth: 1,
+      canvas: canvas,
+      x: rectX * 11.6,
+      y: rectY * 22.4,
+      orientation: 'vertical',
+    },
+    {
+      length: height * 0.395,
+      color: textColor,
+      strokeWidth: 1,
+      canvas: canvas,
+      x: rectX * 8,
+      y: rectY * 8.5,
+      orientation: 'vertical',
+      arrowStart: true,
+      arrowEnd: true,
+    },
+    ,
+    {
+      length: height * 0.356,
+      color: textColor,
+      strokeWidth: 1,
+      canvas: canvas,
+      x: rectX * 53.6,
+      y: rectY * 9.2,
+      orientation: 'vertical',
+      arrowStart: true,
+      arrowEnd: true,
+    },
+    {
+      rectX: rectX * 1.159,
+      rectY: rectY * 5,
+      rectWidth: rectWidth * 0.07,
+      rectHeight: height * 0.04,
+      strokeColor: borderColor,
+      strokeWidth: 1,
+      text: `${getNicheWidth(selectedConfigurationValues, additionalConfiguration)}"`,
+      textColor: textColor,
+      scaleFactor: 1.5,
+    },
   ];
 
   elements.forEach(element => {

@@ -123,15 +123,15 @@ const FabricCanvas: React.FC<CanvusProps> = ({ fabricCanvasRef }) => {
         fill: color,
         width: arrowWidth,
         height: arrowHeight,
-        angle: orientation === 'horizontal' ? 270 : -90,
+        angle: orientation === 'horizontal' ? 270 : 0,
         left:
           orientation === 'horizontal'
             ? x * 0.5
-            : x - arrowWidth / 2, 
+            : x - (arrowHeight / 2.5), 
         top:
           orientation === 'horizontal'
             ? y * 1.2
-            : y - arrowWidth, 
+            : y * 0.99, 
       });
   
       canvas.add(startArrow);
@@ -142,15 +142,15 @@ const FabricCanvas: React.FC<CanvusProps> = ({ fabricCanvasRef }) => {
         fill: color,
         width: arrowWidth,
         height: arrowHeight,
-        angle: orientation === 'horizontal' ? 90 : 90, 
+        angle: orientation === 'horizontal' ? 90 : 180, 
         left:
           orientation === 'horizontal'
             ? x + length * 1.016
-            : x - arrowWidth / 2, 
+            : x + (arrowHeight / 1.5 ), 
         top:
           orientation === 'horizontal'
             ? y * 0.855
-            : y + length - arrowWidth, 
+            : y + length * 1.02 , 
       });
   
       canvas.add(endArrow);
@@ -350,6 +350,8 @@ const FabricCanvas: React.FC<CanvusProps> = ({ fabricCanvasRef }) => {
       createDynamicRectangle,
       addImageToCanvas,
       addLineToCanvas,
+      selectedConfigurationValues,
+      additionalConfiguration,
     })
 
     // Handle resizing
