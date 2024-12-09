@@ -1,5 +1,5 @@
 
-import getDescriptionContainerTitle, { getDate, getDepartmentText, getDrawerName, getNicheDepth, getNicheHeight, getNicheWidth, getRBoxDepth, getRBoxHeight, getRBoxWidth, getScreenDistanceFromFloorLine, getScreenHeightDimension, getScreenSizeText, getScreenWidthDimension } from "./CanvasUtils";
+import getDescriptionContainerTitle, { getDate, getDepartmentText, getDrawerName, getNicheDepth, getNicheHeight, getNicheWidth, getRBoxDepth, getRBoxHeight, getRBoxWidth, getScreenHeightDimension, getScreenSizeText, getScreenWidthDimension } from "./CanvasUtils";
 
 const createScreenDimensionBox = ({
     fabricCanvasRef,

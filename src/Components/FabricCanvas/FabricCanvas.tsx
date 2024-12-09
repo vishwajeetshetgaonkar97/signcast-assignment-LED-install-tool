@@ -241,7 +241,6 @@ const FabricCanvas: React.FC = () => {
         fillColor,
         cardTextColor,
         textColor,
-        selectedConfigurationValues,
         additionalConfiguration,
         createDynamicRectangle,
       });
