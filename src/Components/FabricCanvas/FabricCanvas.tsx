@@ -128,7 +128,7 @@ const FabricCanvas: React.FC = () => {
       fontSize: Math.min(rectWidth, rectHeight) * 0.2,
       fill: textColor,
       originX: textOriginX as 'left' | 'center' | 'right',
-      originY: 'center',
+      originY: 'center' as fabric.TOriginY,
       left: rectX + rectWidth / 2,
       top: rectY + rectHeight / 2,
       fontWeight: fontWeight,
