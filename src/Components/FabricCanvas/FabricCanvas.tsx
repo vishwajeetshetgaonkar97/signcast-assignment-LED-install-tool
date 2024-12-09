@@ -3,13 +3,13 @@ import * as fabric from 'fabric';
 import SelectedConfigurationContext from '../../Contexts/SelectedConfigurationContext';
 import AdditionalConfigurationContext from '../../Contexts/AdditionalConfigurationContext';
 import DescripotionDataContext from '../../Contexts/DescripotionDataContext';
-import { createDescriptionBox, createNicheDimensionBox, createNotesBox, createScreenDimensionBox } from '../../utils/CanvasDrawingsUtils';
+import { createDescriptionBox, createDimensionBoxDiagram, createNicheDimensionBox, createNotesBox, createScreenDimensionBox } from '../../utils/CanvasDrawingsUtils';
 
 interface CanvusProps {
   fabricCanvasRef: React.MutableRefObject<fabric.Canvas>;
 }
 
-const FabricCanvas: React.FC <CanvusProps>= ({fabricCanvasRef}) => {
+const FabricCanvas: React.FC<CanvusProps> = ({ fabricCanvasRef }) => {
   const { selectedConfiguration } = useContext(SelectedConfigurationContext);
   const { additionalConfiguration } = useContext(AdditionalConfigurationContext);
   const { descriptionConfiguration } = useContext(DescripotionDataContext);
@@ -70,6 +70,96 @@ const FabricCanvas: React.FC <CanvusProps>= ({fabricCanvasRef}) => {
     isMultiline?: boolean;
   }
 
+  interface LineOptions {
+    length?: number;
+    color?: string;
+    strokeWidth?: number;
+    isDotted?: boolean;
+    arrowStart?: boolean;
+    arrowEnd?: boolean;
+    canvas: fabric.Canvas | null;
+    x?: number;
+    y?: number;
+    orientation?: 'horizontal' | 'vertical'; 
+  }
+  const addLineToCanvas = ({
+    length = 100,
+    color = 'black',
+    strokeWidth = 2,
+    isDotted = false,
+    arrowStart = false,
+    arrowEnd = false,
+    canvas,
+    x = 0,
+    y = 0,
+    orientation = 'horizontal', 
+  }: LineOptions) => {
+    if (!canvas) return;
+  
+    console.log("Line Called:");
+  
+    // Define line points based on orientation
+    const points =
+      orientation === 'horizontal'
+        ? [0, 0, length, 0] 
+        : [0, 0, 0, length]; 
+  
+    const line = new fabric.Line(points, {
+      stroke: color,
+      strokeWidth: strokeWidth,
+      strokeDashArray: isDotted ? [7, 7] : undefined,
+      left: x,
+      top: y,
+    });
+  
+    canvas.add(line);
+  
+    const arrowSize = strokeWidth * 4;
+    const arrowWidth = strokeWidth * 3;
+    const arrowHeight = arrowSize;
+  
+    if (arrowStart) {
+      const startArrow = new fabric.Triangle({
+        fill: color,
+        width: arrowWidth,
+        height: arrowHeight,
+        angle: orientation === 'horizontal' ? 270 : -90,
+        left:
+          orientation === 'horizontal'
+            ? x * 0.5
+            : x - arrowWidth / 2, 
+        top:
+          orientation === 'horizontal'
+            ? y * 1.2
+            : y - arrowWidth, 
+      });
+  
+      canvas.add(startArrow);
+    }
+  
+    if (arrowEnd) {
+      const endArrow = new fabric.Triangle({
+        fill: color,
+        width: arrowWidth,
+        height: arrowHeight,
+        angle: orientation === 'horizontal' ? 90 : 90, 
+        left:
+          orientation === 'horizontal'
+            ? x + length * 1.016
+            : x - arrowWidth / 2, 
+        top:
+          orientation === 'horizontal'
+            ? y * 0.855
+            : y + length - arrowWidth, 
+      });
+  
+      canvas.add(endArrow);
+    }
+  
+    canvas.renderAll();
+  };
+  
+
 
   const addImageToCanvas = ({
     imageUrl,
@@ -98,64 +188,64 @@ const FabricCanvas: React.FC <CanvusProps>= ({fabricCanvasRef}) => {
 
 
   // Function to create customized rectangles based on the provided options
-    const createDynamicRectangle = ({
-      rectX,
-      rectY,
-      rectWidth,
-      rectHeight,
-      strokeColor = 'transparent',
-      fillColor = 'transparent',
-      strokeWidth = 2,
-      isDotted = false,
-      text = '',
-      textColor = 'transparent',
-      isDraggable = false,
-      fontWeight = 'normal',
-      scaleFactor = 1,
-      textOriginX = 'center',
-      isMultiline = false,
-    }: RectangleOptions): fabric.Group => {
-  
-      const rect = new fabric.Rect({
-        left: rectX,
-        top: rectY,
-        width: rectWidth,
-        height: rectHeight,
-        fill: fillColor,
-        stroke: strokeColor,
-        strokeWidth: strokeWidth,
-        strokeDashArray: isDotted ? [5, 5] : [],
-      });
-  
-      const textOptions = {
-        fontSize: Math.min(rectWidth, rectHeight) * 0.2,
-        fill: textColor,
-        originX: textOriginX as 'left' | 'center' | 'right',
-        originY: 'center' as fabric.TOriginY,
-        left: rectX + rectWidth / 2,
-        top: rectY + rectHeight / 2,
-        fontWeight: fontWeight,
-        scaleX: scaleFactor,
-        scaleY: scaleFactor,
-        fontFamily: 'Poppins',
-      };
-  
-      const textObj = isMultiline
-        ? new fabric.Textbox(String(text).replace(/\\n/g, '\n'), { ...textOptions, width: rectWidth, textAlign: textOriginX })
-        : new fabric.Text(String(text), textOptions);
-  
-      const group = new fabric.Group([rect, textObj], {
-        left: rectX,
-        top: rectY,
-        selectable: true,
-        hasControls: isDraggable,
-        lockMovementX: !isDraggable,
-        lockMovementY: !isDraggable,
-      });
-  
-      return group;
+  const createDynamicRectangle = ({
+    rectX,
+    rectY,
+    rectWidth,
+    rectHeight,
+    strokeColor = 'transparent',
+    fillColor = 'transparent',
+    strokeWidth = 2,
+    isDotted = false,
+    text = '',
+    textColor = 'transparent',
+    isDraggable = false,
+    fontWeight = 'normal',
+    scaleFactor = 1,
+    textOriginX = 'center',
+    isMultiline = false,
+  }: RectangleOptions): fabric.Group => {
+
+    const rect = new fabric.Rect({
+      left: rectX,
+      top: rectY,
+      width: rectWidth,
+      height: rectHeight,
+      fill: fillColor,
+      stroke: strokeColor,
+      strokeWidth: strokeWidth,
+      strokeDashArray: isDotted ? [9, 9] : [],
+    });
+
+    const textOptions = {
+      fontSize: Math.min(rectWidth, rectHeight) * 0.2,
+      fill: textColor,
+      originX: textOriginX as 'left' | 'center' | 'right',
+      originY: 'center' as fabric.TOriginY,
+      left: rectX + rectWidth / 2,
+      top: rectY + rectHeight / 2,
+      fontWeight: fontWeight,
+      scaleX: scaleFactor,
+      scaleY: scaleFactor,
+      fontFamily: 'Poppins',
     };
-  
+
+    const textObj = isMultiline
+      ? new fabric.Textbox(String(text).replace(/\\n/g, '\n'), { ...textOptions, width: rectWidth, textAlign: textOriginX })
+      : new fabric.Text(String(text), textOptions);
+
+    const group = new fabric.Group([rect, textObj], {
+      left: rectX,
+      top: rectY,
+      selectable: true,
+      hasControls: isDraggable,
+      lockMovementX: !isDraggable,
+      lockMovementY: !isDraggable,
+    });
+
+    return group;
+  };
+
 
 
 
@@ -249,6 +339,18 @@ const FabricCanvas: React.FC <CanvusProps>= ({fabricCanvasRef}) => {
         createDynamicRectangle,
       });
     }
+
+    createDimensionBoxDiagram({
+      fabricCanvasRef,
+      borderColor: infoContainerBorderColor,
+      headingTextColor,
+      highlightFillColor,
+      textColor,
+      descriptionConfiguration,
+      createDynamicRectangle,
+      addImageToCanvas,
+      addLineToCanvas,
+    })
 
     // Handle resizing
     updateCanvasSize();
