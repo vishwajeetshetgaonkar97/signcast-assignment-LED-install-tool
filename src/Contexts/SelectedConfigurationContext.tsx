@@ -1,4 +1,4 @@
-import React, { createContext, useContext, Dispatch, SetStateAction } from 'react';
+import { createContext, useContext, Dispatch, SetStateAction } from 'react';
 import { ScreenMFR, MediaPlayerMFR, Mounts, ReceptacleBox } from '../types/GoogleSheetDataTypes';
 
 type SelectedValues = {
