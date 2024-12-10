@@ -1,5 +1,6 @@
 import * as fabric from 'fabric';
 import getDescriptionContainerTitle, { getDate, getDepartmentText, getDrawerName, getIfScreenOrientationVertical, getNicheDepth, getNicheHeight, getNicheWidth, getRBoxDepth, getRBoxHeight, getRBoxWidth, getScreenDistanceFromFloorLine, getScreenHeightDimension, getScreenSizeText, getScreenWidthDimension } from "./CanvasUtils";
+import { scale, stroke } from 'pdf-lib';
 
 const createScreenDimensionBox = ({
   fabricCanvasRef,
@@ -481,7 +482,7 @@ const createDescriptionBox = ({
       strokeColor: borderColor,
       strokeWidth: 1,
       text: getDrawerName(descriptionConfiguration),
-      textColor: textColor,
+      textColor: headingTextColor,
       scaleFactor: 1.5,
     },
     {
@@ -538,7 +539,7 @@ const createDescriptionBox = ({
       strokeColor: borderColor,
       strokeWidth: 1,
       text: getDate(descriptionConfiguration),
-      textColor: textColor,
+      textColor: headingTextColor,
       scaleFactor: 1.8,
       fontWeight: '500',
     },
@@ -563,7 +564,7 @@ const createDescriptionBox = ({
       strokeColor: borderColor,
       strokeWidth: 1,
       text: "1 of 1",
-      textColor: textColor,
+      textColor: headingTextColor,
       scaleFactor: 1.8,
       fontWeight: '500',
     },
@@ -588,7 +589,7 @@ const createDescriptionBox = ({
       strokeColor: borderColor,
       strokeWidth: 1,
       text: "00",
-      textColor: textColor,
+      textColor: headingTextColor,
       scaleFactor: 1.8,
       fontWeight: '500',
     },
@@ -613,7 +614,7 @@ const createDescriptionBox = ({
       strokeColor: borderColor,
       strokeWidth: 1,
       text: getScreenSizeText(descriptionConfiguration),
-      textColor: textColor,
+      textColor: headingTextColor,
       scaleFactor: 1.5,
     },
     {
@@ -637,7 +638,7 @@ const createDescriptionBox = ({
       strokeColor: borderColor,
       strokeWidth: 1,
       text: getDepartmentText(descriptionConfiguration),
-      textColor: textColor,
+      textColor: headingTextColor,
       scaleFactor: 1.8,
       fontWeight: '500',
     },
@@ -1014,10 +1015,23 @@ const createDimensionBoxDiagram = ({
     }
   });
 };
+
+const createLineWithAngle = (startX, startY, angle, length, borderColor) => {
+  const radians = angle * (Math.PI / 180); // Convert angle to radians
+  const endX = startX + length * Math.cos(radians); // Calculate the end X coordinate
+  const endY = startY + length * Math.sin(radians); // Calculate the end Y coordinate
+
+  return new fabric.Line([startX, startY, endX, endY], {
+    stroke: borderColor,   // Set the line's border color
+    strokeWidth: 1,        // Set the line's stroke width
+    selectable: true       // Make the line selectable
+  });
+};
+
 const createMovableReceptorBox = ({
   fabricCanvasRef,
   borderColor,
-
+  createDynamicRectangle,
 }) => {
   const canvas = fabricCanvasRef.current;
   if (!canvas) return;
@@ -1028,55 +1042,70 @@ const createMovableReceptorBox = ({
   const rectWidth = width * 0.19;
   const rectHeight = height * 0.24;
   const rectX = width * 0.795;
-  const rectY = height * 0.03;
+  const rectY = height * 0.05;
 
   const elements = [
-    {
-      rectX:  rectX * 2.503,
-      rectY:  rectY * 9.3,
-      rectWidth:  rectWidth * 0.3,
+    createDynamicRectangle({
+      rectX: rectX * 0.504,
+      rectY: rectY * 9.4,
+      rectWidth: rectWidth * 0.29,
       rectHeight: rectHeight * 0.35,
       strokeColor: borderColor,
-      strokeWidth: 1,
       isDotted: true,
-      isDraggable: true,
-    },
-    {
-      rectX:  rectX * 2.51,
-      rectY:  rectY * 9.6,
-      rectWidth:  rectWidth * 0.24,
+      dashPattern: [3, 3],
+      strokeWidth: 0.9,
+    }),
+    createDynamicRectangle({
+      rectX: rectX * 0.51,
+      rectY: rectY * 9.6,
+      rectWidth: rectWidth * 0.24,
       rectHeight: rectHeight * 0.27,
       strokeColor: borderColor,
-      strokeWidth: 1,
       isDotted: true,
-      isDraggable: true,
-    },
+      dashPattern: [3, 3],
+      strokeWidth: 0.9,
+    }),
+    createDynamicRectangle({
+      rectX: rectX * 0.7,
+      rectY: rectY * 1.95,
+      rectWidth: rectWidth * 0.5,
+      rectHeight: rectHeight * 0.27,
+      text: "  Install Reccesed \nreceptable box",
+      isMultiline: true,
+      textColor: borderColor,
+      textOriginX: 'center',
+      scaleFactor: 1.1,
+      
+    }),
   ];
 
-  const rects = elements.map(element => {
-    return new fabric.Rect({
-      left: element.rectX,
-      top: element.rectY,
-      width: element.rectWidth,
-      height: element.rectHeight,
-      stroke: element.strokeColor,
-      strokeWidth: element.strokeWidth,
-      fill: 'transparent',
-      strokeDashArray: [4, 4],
-      selectable: true,
-    });
+  // Create circle dot
+  const circle = new fabric.Circle({
+    left: rectX * 0.55,
+    top: rectY * 10,
+    radius: 2,
+    stroke: borderColor,
+    strokeWidth: 1,
+    fill: borderColor,
+    selectable: true,
   });
 
-  const group = new fabric.Group(rects, {
+  // adding this as my line function does not return group but adds it to canvas direct and requirement here is different
+  const line1 = createLineWithAngle(rectX * 0.5535, rectY * 10, -75, rectX * 0.27, borderColor); 
+  const line2 = createLineWithAngle(rectX * 0.624, rectY * 2.64, 0, rectX * 0.09, borderColor);
+
+
+  // Group all elements together
+  const allElements = [...elements, circle, line1, line2];
+  const group = new fabric.Group(allElements, {
     selectable: true,
     left: width * 0.282,
-    top: height * 0.5,
+    top: height * 0.13,
   });
 
   canvas.add(group);
   canvas.renderAll();
 };
-
 
 
 export { createScreenDimensionBox, createNicheDimensionBox, createNotesBox, createDescriptionBox, createDimensionBoxDiagram, createMovableReceptorBox };

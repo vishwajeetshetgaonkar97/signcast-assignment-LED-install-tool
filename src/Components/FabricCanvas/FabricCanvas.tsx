@@ -68,6 +68,7 @@ const FabricCanvas: React.FC<CanvusProps> = ({ fabricCanvasRef }) => {
     textOriginX?: string;
     fillColor?: string;
     isMultiline?: boolean;
+    dashPattern?: number[];
   }
 
   interface LineOptions {
@@ -95,8 +96,6 @@ const FabricCanvas: React.FC<CanvusProps> = ({ fabricCanvasRef }) => {
     orientation = 'horizontal', 
   }: LineOptions) => {
     if (!canvas) return;
-  
-    console.log("Line Called:");
   
     // Define line points based on orientation
     const points =
@@ -197,6 +196,7 @@ const FabricCanvas: React.FC<CanvusProps> = ({ fabricCanvasRef }) => {
     fillColor = 'transparent',
     strokeWidth = 2,
     isDotted = false,
+    dashPattern = [9, 9],
     text = '',
     textColor = 'transparent',
     isDraggable = false,
@@ -213,7 +213,7 @@ const FabricCanvas: React.FC<CanvusProps> = ({ fabricCanvasRef }) => {
       fill: fillColor,
       stroke: strokeColor,
       strokeWidth: strokeWidth,
-      strokeDashArray: isDotted ? [9, 9] : [],
+      strokeDashArray: isDotted ? dashPattern : [],
     });
   
     const textOptions = {
@@ -354,10 +354,11 @@ const FabricCanvas: React.FC<CanvusProps> = ({ fabricCanvasRef }) => {
       selectedConfigurationValues,
       additionalConfiguration,
     })
+
     createMovableReceptorBox({
       fabricCanvasRef,
-      borderColor,
-    
+     borderColor: textColor,
+      createDynamicRectangle,
     })
 
     // Handle resizing
