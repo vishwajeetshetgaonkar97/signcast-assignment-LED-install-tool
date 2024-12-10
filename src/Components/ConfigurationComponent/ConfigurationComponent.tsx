@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ScreenMFRDataContext from "../../Contexts/ScreenMFRDataContext";
 import MediaPlayerMFRDataContext from "../../Contexts/MediaPlayerMFRDataContext";
 import MountsDataContext from "../../Contexts/MountsDataContext";
@@ -7,7 +7,7 @@ import SelectedConfigurationContext from "../../Contexts/SelectedConfigurationCo
 import AdditionalConfigurationContext from "../../Contexts/AdditionalConfigurationContext";
 
 
-const ConfigurationComponent = () => {
+const ConfigurationComponent : React.FC = () => {
   const { screenMFRData } = useContext(ScreenMFRDataContext);
   const { mediaPlayerMFRData } = useContext(MediaPlayerMFRDataContext);
   const { mountsData } = useContext(MountsDataContext);
@@ -37,7 +37,6 @@ const ConfigurationComponent = () => {
   });
 
   useEffect(() => {
-
     const updatedValues = {
       screenMFR: screenMFRData[0] || null,
       mediaPlayerMFR: mediaPlayerMFRData[0] || null,
@@ -48,8 +47,6 @@ const ConfigurationComponent = () => {
     setSelectedConfiguration(updatedValues);
 
   }, [screenMFRData, mediaPlayerMFRData, mountsData, receptacleBoxData]);
-
-
 
   const handleSelectionChange = (field: string, value: string) => {
     let updatedValue = null;
@@ -128,6 +125,7 @@ const ConfigurationComponent = () => {
         </select>
       </div>
 
+      {/* Mount */}
       <div className="pb-2">
         <label
           htmlFor="mount"
@@ -173,7 +171,7 @@ const ConfigurationComponent = () => {
         </select>
       </div>
 
-      {/* Additional Configuration: Orientation */}
+      {/* Additional Configurations */}
       <div className="flex align-center gap-0 pt-1">
         <button
           type="button"
@@ -191,7 +189,6 @@ const ConfigurationComponent = () => {
         </button>
       </div>
 
-      {/* Additional Configuration: Niche Type */}
       <div className="flex align-center gap-0 pt-1">
         <button
           type="button"
@@ -225,6 +222,7 @@ const ConfigurationComponent = () => {
         />
       </div>
 
+      {/* added this variable to control niche  */}
       {additionalConfig && additionalConfig.nicheType === "niche" && <>
 
         <div className="flex align-center gap-0 pt-1 ">
@@ -261,7 +259,7 @@ const ConfigurationComponent = () => {
         </div>
       </>}
 
-
+      {/* receptor box dimensions control variables  */}
       <div className="flex align-center flex-col gap-0 pt-2">
         <label
           htmlFor="mount"
@@ -269,7 +267,6 @@ const ConfigurationComponent = () => {
         >
           Receptor Box Dimensions
         </label>
-
 
         <div className="flex align-center gap-0 pt-1 ">
           <label

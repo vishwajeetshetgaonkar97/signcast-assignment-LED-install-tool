@@ -1,5 +1,6 @@
 
 import { jsPDF } from "jspdf";
+
 const getScreenHeightDimension = (selectedConfigurationValues: any) => {
     if (!selectedConfigurationValues.screenMFR) return 0;
     return parseFloat(selectedConfigurationValues.screenMFR?.Height || 0);
@@ -33,7 +34,6 @@ const getNicheDepth = (selectedConfigurationValues: any, additionalConfiguration
     if (!selectedConfigurationValues || !additionalConfiguration || !selectedConfigurationValues.screenMFR) {
         return 0;
     }
-
     const screenDepth = parseFloat(selectedConfigurationValues.screenMFR?.Depth ?? '0');
     const depthVariance = parseFloat(additionalConfiguration.nicheDepth ?? '0');
     const mediaPlayerDepth = selectedConfigurationValues.MediaPlayerMFR ? parseFloat(selectedConfigurationValues.MediaPlayerMFR.Depth ?? '0') : 0;
@@ -156,6 +156,7 @@ const downloadCanvasAsPdf = (canvas) => {
 export default getDescriptionContainerTitle
 export {
     getDescriptionContainerTitle, getDrawerName, getDate,
-    getScreenSizeText, getDepartmentText, getRBoxHeight, getRBoxWidth, getRBoxDepth,
-    getScreenHeightDimension, getScreenWidthDimension, getScreenDistanceFromFloorLine, getNicheHeight, getNicheWidth, getNicheDepth, downloadCanvasAsPdf,getIfScreenOrientationVertical
+    getScreenSizeText, getDepartmentText, getRBoxHeight, getRBoxWidth, 
+    getRBoxDepth,getScreenHeightDimension, getScreenWidthDimension, getScreenDistanceFromFloorLine, 
+    getNicheHeight, getNicheWidth, getNicheDepth, downloadCanvasAsPdf,getIfScreenOrientationVertical
 }

@@ -1,7 +1,7 @@
-import { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import DescripotionDataContext from "../../Contexts/DescripotionDataContext";
 
-const DescriptionConfigComponent = () => {
+const DescriptionConfigComponent : React.FC = () => {
   const { descriptionConfiguration, setDescriptionConfiguration } = useContext(DescripotionDataContext);
 
   // Default values initialization
@@ -13,7 +13,6 @@ const DescriptionConfigComponent = () => {
     date: descriptionConfiguration?.date || "",
   });
 
-  // Function to format date in DD/MM/YYYY
   const formatDate = (date) => {
     const [year, month, day] = date.split("-");
     return `${day}/${month}/${year}`;

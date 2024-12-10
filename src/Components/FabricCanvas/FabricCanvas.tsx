@@ -254,10 +254,6 @@ const FabricCanvas: React.FC<CanvusProps> = ({ fabricCanvasRef }) => {
   
     return group;
   };
-  
-
-
-
 
   // Update canvas size dynamically
   const updateCanvasSize = () => {
@@ -388,7 +384,6 @@ const FabricCanvas: React.FC<CanvusProps> = ({ fabricCanvasRef }) => {
         ref={canvasRef}
         className='border border-border-color h-full w-full'
       />
-
     </div>
   );
 };

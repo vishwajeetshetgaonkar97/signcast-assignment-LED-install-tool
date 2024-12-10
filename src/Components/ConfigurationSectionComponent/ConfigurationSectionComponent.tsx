@@ -14,7 +14,6 @@ const ConfigurationSectionComponent : React.FC <CanvusProps> = ({fabricCanvasRef
       <div className="flex flex-col gap-4 max-h-full overflow-y-auto border-border-color border-b border-opacity-50">
         <ConfigurationComponent />
         <DescriptionConfigComponent />
-
       </div>
       <div className="flex ">
         <button   onClick={() => downloadCanvasAsPdf(fabricCanvasRef.current)} className="w-full py-2 text-xs bg-blue-700 text-blue-50 text-blue-50 border border-border-color focus:outline-none hover:bg-blue-600 flex items-center justify-between gap-2">

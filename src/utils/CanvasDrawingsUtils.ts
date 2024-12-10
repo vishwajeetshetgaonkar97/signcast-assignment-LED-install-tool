@@ -2,17 +2,16 @@ import * as fabric from 'fabric';
 import getDescriptionContainerTitle, { getDate, getDepartmentText, getDrawerName, getIfScreenOrientationVertical, getNicheDepth, getNicheHeight, getNicheWidth, getRBoxDepth, getRBoxHeight, getRBoxWidth, getScreenDistanceFromFloorLine, getScreenHeightDimension, getScreenSizeText, getScreenWidthDimension } from "./CanvasUtils";
 
 const createLineWithAngle = (startX, startY, angle, length, borderColor) => {
-  const radians = angle * (Math.PI / 180); 
-  const endX = startX + length * Math.cos(radians); 
-  const endY = startY + length * Math.sin(radians); 
+  const radians = angle * (Math.PI / 180);
+  const endX = startX + length * Math.cos(radians);
+  const endY = startY + length * Math.sin(radians);
 
   return new fabric.Line([startX, startY, endX, endY], {
-    stroke: borderColor,   
-    strokeWidth: 1,       
-    selectable: true      
+    stroke: borderColor,
+    strokeWidth: 1,
+    selectable: true
   });
 };
-
 
 const createScreenDimensionBox = ({
   fabricCanvasRef,
@@ -253,6 +252,8 @@ const createNicheDimensionBox = ({
   elements.forEach(element => canvas.add(createDynamicRectangle(element)));
 };
 
+
+
 const createNotesBox = ({
   fabricCanvasRef,
   borderColor,
@@ -401,6 +402,8 @@ const createNotesBox = ({
 
   elements.forEach(element => canvas.add(createDynamicRectangle(element)));
 };
+
+
 
 const createDescriptionBox = ({
   fabricCanvasRef,
@@ -670,6 +673,7 @@ const createDescriptionBox = ({
     }
   });
 };
+
 
 const createDimensionBoxDiagram = ({
   fabricCanvasRef,
@@ -1038,7 +1042,7 @@ const createDimensionBoxDiagram = ({
 
   ];
 
-  const slantedLabelLine = createLineWithAngle(rectX * 31.1, rectY * 15, -75, rectX * 19.5, textColor); 
+  const slantedLabelLine = createLineWithAngle(rectX * 31.1, rectY * 15, -75, rectX * 19.5, textColor);
 
   elements.forEach(element => {
     if (element.length) { addLineToCanvas(element); } else {
@@ -1097,7 +1101,7 @@ const createMovableReceptorBox = ({
       textColor: borderColor,
       textOriginX: 'center',
       scaleFactor: 1.1,
-      
+
     }),
   ];
 
@@ -1113,11 +1117,9 @@ const createMovableReceptorBox = ({
   });
 
   // adding this as my line function does not return group but adds it to canvas direct and requirement here is different
-  const line1 = createLineWithAngle(rectX * 0.5535, rectY * 10, -75, rectX * 0.27, borderColor); 
+  const line1 = createLineWithAngle(rectX * 0.5535, rectY * 10, -75, rectX * 0.27, borderColor);
   const line2 = createLineWithAngle(rectX * 0.624, rectY * 2.64, 0, rectX * 0.09, borderColor);
 
-
-  // Group all elements together
   const allElements = [...elements, circle, line1, line2];
   const group = new fabric.Group(allElements, {
     selectable: true,

@@ -1,12 +1,12 @@
 import React from "react";
 
-interface TopBarProps {
+interface ThemeSelectionProps {
   themeMode: string;
   // options to add more themes 
   setThemeMode: (mode: "dark" | "light" | "ocean") => void;
 }
 
-const TopBar: React.FC<TopBarProps> = ({ themeMode, setThemeMode }) => {
+const TopBar: React.FC<ThemeSelectionProps> = ({ themeMode, setThemeMode }) => {
 
   // this logic can be upgraded to add more themes 
   const toggleDMode = () => {
