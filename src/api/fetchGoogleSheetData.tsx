@@ -2,7 +2,6 @@ import axios from "axios";
 import { ScreenMFR, MediaPlayerMFR, Mounts, ReceptacleBox } from "../types/GoogleSheetDataTypes";
 
 
-// Function to fetch the data from Google Apps Script
 export const fetchGoogleSheetData = async (): Promise<{
   screenMFRData: ScreenMFR[];
   mediaPlayerMFRData: MediaPlayerMFR[];
@@ -14,7 +13,6 @@ export const fetchGoogleSheetData = async (): Promise<{
   try {
     const response = await axios.get(url);
     
-    // Returning the response data with the required structure
     return {
       screenMFRData: response.data.screenMFRData,
       mediaPlayerMFRData: response.data.mediaPlayerMFRData,
@@ -22,7 +20,7 @@ export const fetchGoogleSheetData = async (): Promise<{
       receptacleBoxData: response.data.receptacleBoxData,
     };
   } catch (error) {
-    console.error("Error fetching data from Google Apps Script:", error);
+    console.error("Error fetching data", error);
     throw new Error("Error fetching data");
   }
 };

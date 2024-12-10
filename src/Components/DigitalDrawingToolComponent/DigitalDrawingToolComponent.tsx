@@ -1,7 +1,7 @@
-import { useState, useEffect, useMemo, useRef } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import FabricCanvas from "../FabricCanvas/FabricCanvas";
 import ConfigurationSectionComponent from "../ConfigurationSectionComponent/ConfigurationSectionComponent";
-import { fetchGoogleSheetData } from "./../../api/fetchGoogleSheetData";
+import { fetchGoogleSheetData } from "../../api/fetchGoogleSheetData";
 import {
   ScreenMFR,
   MediaPlayerMFR,
@@ -11,15 +11,17 @@ import {
   DescriptionConfig,
 } from "../../types/GoogleSheetDataTypes";
 import ScreenMFRDataContext from "../../Contexts/ScreenMFRDataContext";
-import MediaPlayerMFRDataContext from "../../Contexts//MediaPlayerMFRDataContext";
+import MediaPlayerMFRDataContext from "../../Contexts/MediaPlayerMFRDataContext";
 import MountsDataContext from "../../Contexts/MountsDataContext";
 import ReceptacleBoxDataContext from "../../Contexts/ReceptacleBoxDataContext";
 import SelectedConfigurationContext from "../../Contexts/SelectedConfigurationContext";
 import AdditionalConfigurationContext from "../../Contexts/AdditionalConfigurationContext";
 import DescripotionDataContext from "../../Contexts/DescripotionDataContext";
-import * as fabric from 'fabric';
+import * as fabric from "fabric";
+import LoaderComponent from "../LoaderComponent/LoaderComponent";
 
-const DrawingToolComponent = () => {
+const DigitalDrawingToolComponent: React.FC = () => {
+  // local state references to data
   const [screenMFRData, setScreenMFRData] = useState<ScreenMFR[]>([]);
   const [mediaPlayerMFRData, setMediaPlayerMFRData] = useState<MediaPlayerMFR[]>([]);
   const [mountsData, setMountsData] = useState<Mounts[]>([]);
@@ -50,12 +52,12 @@ const DrawingToolComponent = () => {
     drawer: "SignCast",
     department: "installation",
     screenSize: `LG 55" Touch Display`,
-    date: new Date().toLocaleDateString('en-GB').split('/').join('/'),
+    date: new Date().toLocaleDateString("en-GB").split("/").join("/"),
   });
 
   const isLoading = !selectedConfiguration || !selectedConfiguration.screenMFR;
 
-
+  // fetch data from database: google sheet 
   const fetchDatabaseData = async () => {
     try {
       const data = await fetchGoogleSheetData();
@@ -70,10 +72,7 @@ const DrawingToolComponent = () => {
     }
   };
 
-  useEffect(() => {
-    fetchDatabaseData();
-  }, []);
-
+  // set local state Contexts 
   const ScreenMFRDataContextValue = useMemo(
     () => ({ screenMFRData, setScreenMFRData }),
     [screenMFRData, setScreenMFRData]
@@ -109,19 +108,16 @@ const DrawingToolComponent = () => {
     [descriptionConfiguration, setDescriptionConfiguration]
   );
 
-  
+  // fetch data on load 
+  useEffect(() => {
+    fetchDatabaseData();
+  }, []);
+
   return (
     <>
+      {/* display loader on loading  */} {/* have used this method and not return on state loading to avoid bloacking of internal state updation */}
       <div className={` ${isLoading ? 'show absolute top-0 left-0 h-full w-full flex items-center justify-center bg-bg-color z-50' : 'hidden'}`}>
-        <div
-          className="inline-block h-10 w-10 text-orange-600 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite]"
-          role="status">
-          <span
-            className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
-          >Loading...</span
-          >
-        </div>
-
+       <LoaderComponent />
       </div>
       <ScreenMFRDataContext.Provider value={ScreenMFRDataContextValue}>
         <MediaPlayerMFRDataContext.Provider value={MediaPlayerMFRDataContextValue}>
@@ -130,12 +126,10 @@ const DrawingToolComponent = () => {
               <SelectedConfigurationContext.Provider value={SelectedConfigurationContextValue}>
                 <AdditionalConfigurationContext.Provider value={AdditionalConfigurationContextValue}>
                   <DescripotionDataContext.Provider value={DescriptionConfigurationContextValue}>
-
                     <div className="flex h-full pb-2 align-center justify-center w-full gap-4 flex-col md:flex-row">
                       <FabricCanvas fabricCanvasRef={fabricCanvasRef} />
                       <ConfigurationSectionComponent fabricCanvasRef={fabricCanvasRef} />
                     </div>
-
                   </DescripotionDataContext.Provider>
                 </AdditionalConfigurationContext.Provider>
               </SelectedConfigurationContext.Provider>
@@ -147,4 +141,4 @@ const DrawingToolComponent = () => {
   );
 };
 
-export default DrawingToolComponent;
+export default DigitalDrawingToolComponent;

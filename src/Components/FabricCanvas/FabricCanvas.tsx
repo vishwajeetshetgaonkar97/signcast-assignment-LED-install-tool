@@ -39,12 +39,23 @@ interface LineOptions {
   y?: number;
   orientation?: 'horizontal' | 'vertical'; 
 }
+interface AddImageToCanvasOptions {
+  imageUrl: string;
+  imageX?: number;
+  imageY?: number;
+  scaleFactor?: number;
+  imageLeft?: number;
+  imageTop?: number;
+  canvas: fabric.Canvas;
+  isDraggable?: boolean;
+}
 
 const FabricCanvas: React.FC<CanvusProps> = ({ fabricCanvasRef }) => {
   const { selectedConfiguration } = useContext(SelectedConfigurationContext);
   const { additionalConfiguration } = useContext(AdditionalConfigurationContext);
   const { descriptionConfiguration } = useContext(DescripotionDataContext);
 
+  // color variables 
   const borderColor = "rgba(0, 0, 0, 0.6)";
   const infoContainerBorderColor = "rgba(0, 0, 0, 0.2)";
   const headingTextColor = "rgba(0, 0, 0, 0.8)";
@@ -54,6 +65,7 @@ const FabricCanvas: React.FC<CanvusProps> = ({ fabricCanvasRef }) => {
   const cardTextColor = "rgba(255, 255, 255,0.8)";
   const highlightFillColor = "rgba(248, 230, 186, 1)";
 
+  // used for canvas resizing
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -82,7 +94,6 @@ const FabricCanvas: React.FC<CanvusProps> = ({ fabricCanvasRef }) => {
     }
   }, [selectedConfiguration]);
 
-
   const addLineToCanvas = ({
     length = 100,
     color = 'black',
@@ -109,6 +120,7 @@ const FabricCanvas: React.FC<CanvusProps> = ({ fabricCanvasRef }) => {
   
     canvas.add(line);
   
+    // option to add arrows 
     const arrowSize = strokeWidth * 4;
     const arrowWidth = strokeWidth * 3;
     const arrowHeight = arrowSize;
@@ -164,7 +176,8 @@ const FabricCanvas: React.FC<CanvusProps> = ({ fabricCanvasRef }) => {
     imageLeft = 0,
     imageTop = 0,
     canvas,
-  }) => {
+    isDraggable = false,
+  }: AddImageToCanvasOptions) => {
     if (!canvas) return;
 
     const imgElement = new Image();
@@ -174,6 +187,7 @@ const FabricCanvas: React.FC<CanvusProps> = ({ fabricCanvasRef }) => {
         top: imageY + imageTop,
         scaleX: scaleFactor,
         scaleY: scaleFactor,
+        selectable: isDraggable,
       });
       canvas.add(imgInstance);
       canvas.renderAll();

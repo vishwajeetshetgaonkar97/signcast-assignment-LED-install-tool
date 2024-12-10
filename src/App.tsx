@@ -1,27 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import TopBar from "./Components/TopBar/TopBar";
-import DrawingToolComponent from "./Components/DrawingToolComponent/DrawingToolComponent";
+import DigitalDrawingToolComponent from "./Components/DigitalDrawingToolComponent/DigitalDrawingToolComponent";
 
-const themes = ["light", "dark", "solarized", "ocean"];
 
 const App: React.FC = () => {
   const [themeMode, setThemeMode] = useState("light");
 
-  useEffect(() => {
-    document.documentElement.className = themeMode;
-  }, [themeMode]);
-
-  const toggleThemeMode = (theme: string) => {
-    if (themes.includes(theme)) {
-      setThemeMode(theme);
-    }
-  };
-
   return (
     <div className={`${themeMode} bg-bg-color h-screen w-full text-text-color  px-4 py-2 font-poppins`}>
-      <TopBar themeMode={themeMode} setThemeMode={toggleThemeMode} />
+      <TopBar themeMode={themeMode} setThemeMode={setThemeMode} />
       <main className="flex h-[95%] pb-2 align-center justify-center  pt-2 flex-col ">
-        <DrawingToolComponent />
+        <DigitalDrawingToolComponent />
       </main>
     </div>
   );
