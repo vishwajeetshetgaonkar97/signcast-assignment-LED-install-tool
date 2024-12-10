@@ -1,6 +1,18 @@
 import * as fabric from 'fabric';
 import getDescriptionContainerTitle, { getDate, getDepartmentText, getDrawerName, getIfScreenOrientationVertical, getNicheDepth, getNicheHeight, getNicheWidth, getRBoxDepth, getRBoxHeight, getRBoxWidth, getScreenDistanceFromFloorLine, getScreenHeightDimension, getScreenSizeText, getScreenWidthDimension } from "./CanvasUtils";
-import { scale, stroke } from 'pdf-lib';
+
+const createLineWithAngle = (startX, startY, angle, length, borderColor) => {
+  const radians = angle * (Math.PI / 180); 
+  const endX = startX + length * Math.cos(radians); 
+  const endY = startY + length * Math.sin(radians); 
+
+  return new fabric.Line([startX, startY, endX, endY], {
+    stroke: borderColor,   
+    strokeWidth: 1,       
+    selectable: true      
+  });
+};
+
 
 const createScreenDimensionBox = ({
   fabricCanvasRef,
@@ -662,12 +674,8 @@ const createDescriptionBox = ({
 const createDimensionBoxDiagram = ({
   fabricCanvasRef,
   borderColor,
-  headingTextColor,
-  highlightFillColor,
   textColor,
-  descriptionConfiguration,
   createDynamicRectangle,
-  addImageToCanvas,
   addLineToCanvas,
   selectedConfigurationValues,
   additionalConfiguration,
@@ -850,7 +858,6 @@ const createDimensionBoxDiagram = ({
     },
 
 
-
     // measurement lines 
 
     {
@@ -1007,26 +1014,41 @@ const createDimensionBoxDiagram = ({
       scaleFactor: 5,
     },
 
+    // center label line
+    {
+      length: width * 0.03,
+      color: textColor,
+      strokeWidth: 0.8,
+      canvas: canvas,
+      x: rectX * 36.1,
+      y: rectY * 3.8,
+      orientation: 'horizontal',
+    },
+    {
+      rectX: rectX * 38,
+      rectY: rectY * 3.4,
+      rectWidth: rectWidth * 0.06,
+      rectHeight: height * 0.03,
+      strokeWidth: 0.8,
+      text: `Intended \n  Screen Position `,
+      textColor: textColor,
+      scaleFactor: 2.4,
+      isMultiline: true
+    },
+
   ];
+
+  const slantedLabelLine = createLineWithAngle(rectX * 31.1, rectY * 15, -75, rectX * 19.5, textColor); 
 
   elements.forEach(element => {
     if (element.length) { addLineToCanvas(element); } else {
       canvas.add(createDynamicRectangle(element, canvas));
     }
   });
+  canvas.add(slantedLabelLine);
 };
 
-const createLineWithAngle = (startX, startY, angle, length, borderColor) => {
-  const radians = angle * (Math.PI / 180); // Convert angle to radians
-  const endX = startX + length * Math.cos(radians); // Calculate the end X coordinate
-  const endY = startY + length * Math.sin(radians); // Calculate the end Y coordinate
 
-  return new fabric.Line([startX, startY, endX, endY], {
-    stroke: borderColor,   // Set the line's border color
-    strokeWidth: 1,        // Set the line's stroke width
-    selectable: true       // Make the line selectable
-  });
-};
 
 const createMovableReceptorBox = ({
   fabricCanvasRef,

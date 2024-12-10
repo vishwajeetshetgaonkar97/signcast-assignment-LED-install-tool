@@ -8,6 +8,37 @@ import { createDescriptionBox, createDimensionBoxDiagram, createMovableReceptorB
 interface CanvusProps {
   fabricCanvasRef: React.MutableRefObject<fabric.Canvas>;
 }
+interface RectangleOptions {
+  rectX: number;
+  rectY: number;
+  rectWidth: number;
+  rectHeight: number;
+  strokeColor?: string;
+  strokeWidth?: number;
+  isDotted?: boolean;
+  text?: string | number;
+  textColor?: string;
+  isDraggable?: boolean;
+  fontWeight?: string | number;
+  scaleFactor?: number;
+  textOriginX?: string;
+  fillColor?: string;
+  isMultiline?: boolean;
+  dashPattern?: number[];
+}
+
+interface LineOptions {
+  length?: number;
+  color?: string;
+  strokeWidth?: number;
+  isDotted?: boolean;
+  arrowStart?: boolean;
+  arrowEnd?: boolean;
+  canvas: fabric.Canvas | null;
+  x?: number;
+  y?: number;
+  orientation?: 'horizontal' | 'vertical'; 
+}
 
 const FabricCanvas: React.FC<CanvusProps> = ({ fabricCanvasRef }) => {
   const { selectedConfiguration } = useContext(SelectedConfigurationContext);
@@ -51,38 +82,7 @@ const FabricCanvas: React.FC<CanvusProps> = ({ fabricCanvasRef }) => {
     }
   }, [selectedConfiguration]);
 
-  // Define an interface for the rectangle options
-  interface RectangleOptions {
-    rectX: number;
-    rectY: number;
-    rectWidth: number;
-    rectHeight: number;
-    strokeColor?: string;
-    strokeWidth?: number;
-    isDotted?: boolean;
-    text?: string | number;
-    textColor?: string;
-    isDraggable?: boolean;
-    fontWeight?: string | number;
-    scaleFactor?: number;
-    textOriginX?: string;
-    fillColor?: string;
-    isMultiline?: boolean;
-    dashPattern?: number[];
-  }
 
-  interface LineOptions {
-    length?: number;
-    color?: string;
-    strokeWidth?: number;
-    isDotted?: boolean;
-    arrowStart?: boolean;
-    arrowEnd?: boolean;
-    canvas: fabric.Canvas | null;
-    x?: number;
-    y?: number;
-    orientation?: 'horizontal' | 'vertical'; 
-  }
   const addLineToCanvas = ({
     length = 100,
     color = 'black',
@@ -97,11 +97,7 @@ const FabricCanvas: React.FC<CanvusProps> = ({ fabricCanvasRef }) => {
   }: LineOptions) => {
     if (!canvas) return;
   
-    // Define line points based on orientation
-    const points =
-      orientation === 'horizontal'
-        ? [0, 0, length, 0] 
-        : [0, 0, 0, length]; 
+    const points: [number, number, number, number] = orientation === 'horizontal' ? [0, 0, length, 0] : [0, 0, 0,length];
   
     const line = new fabric.Line(points, {
       stroke: color,
@@ -344,12 +340,8 @@ const FabricCanvas: React.FC<CanvusProps> = ({ fabricCanvasRef }) => {
     createDimensionBoxDiagram({
       fabricCanvasRef,
       borderColor: "rgb(0, 0, 0,0.02)",
-      headingTextColor,
-      highlightFillColor,
       textColor,
-      descriptionConfiguration,
       createDynamicRectangle,
-      addImageToCanvas,
       addLineToCanvas,
       selectedConfigurationValues,
       additionalConfiguration,

@@ -2,12 +2,18 @@ import React from "react";
 
 interface TopBarProps {
   themeMode: string;
-  setThemeMode: (mode: "dark" | "light" | "solarized" | "ocean") => void;
+  // options to add more themes 
+  setThemeMode: (mode: "dark" | "light" | "ocean") => void;
 }
 
 const TopBar: React.FC<TopBarProps> = ({ themeMode, setThemeMode }) => {
+
+  // this logic can be upgraded to add more themes 
   const toggleDMode = () => {
+    // can try ocean mode commenting this line
     setThemeMode(themeMode === "light" ? "dark" : "light");
+    // uncomment this line to use ocean mode 
+    // setThemeMode(themeMode === "light" ? "ocean" : "light");
   };
 
   return (
@@ -19,7 +25,7 @@ const TopBar: React.FC<TopBarProps> = ({ themeMode, setThemeMode }) => {
       >
         <svg
           className={`fill-violet-700 ${
-            themeMode === "light" ? "hidden" : "block"
+            themeMode === "light" ? "block" : "hidden"
           }`}
           fill="currentColor"
           viewBox="0 0 20 20"
@@ -28,7 +34,7 @@ const TopBar: React.FC<TopBarProps> = ({ themeMode, setThemeMode }) => {
         </svg>
         <svg
           className={`fill-yellow-500 ${
-            themeMode === "light" ? "block" : "hidden"
+            themeMode === "light" ? "hidden" : "block"
           }`}
           fill="currentColor"
           viewBox="0 0 20 20"

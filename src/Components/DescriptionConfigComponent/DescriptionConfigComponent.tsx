@@ -56,7 +56,7 @@ const DescriptionConfigComponent = () => {
           name="title"
           value={descriptionValues.title}
           onChange={handleChange}
-          className="border bg-card-color border-border-color text-card-text-color text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
+          className="border bg-card-color border-border-color text-card-text-color text-xs focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
         />
       </div>
 
@@ -70,7 +70,7 @@ const DescriptionConfigComponent = () => {
           name="drawer"
           value={descriptionValues.drawer}
           onChange={handleChange}
-          className="border bg-card-color border-border-color text-card-text-color text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
+          className="border bg-card-color border-border-color text-card-text-color text-xs focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
         />
       </div>
 
@@ -84,7 +84,7 @@ const DescriptionConfigComponent = () => {
           name="department"
           value={descriptionValues.department}
           onChange={handleChange}
-          className="border bg-card-color border-border-color text-card-text-color text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
+          className="border bg-card-color border-border-color text-card-text-color text-xs focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
         />
       </div>
 
@@ -98,7 +98,7 @@ const DescriptionConfigComponent = () => {
           name="screenSize"
           value={descriptionValues.screenSize}
           onChange={handleChange}
-          className="border bg-card-color border-border-color text-card-text-color text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
+          className="border bg-card-color border-border-color text-card-text-color text-xs focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
         />
       </div>
 
@@ -112,7 +112,7 @@ const DescriptionConfigComponent = () => {
           name="date"
           value={descriptionValues.date.split("/").reverse().join("-")}
           onChange={handleChange}
-          className="border bg-card-color border-border-color text-card-text-color text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
+          className="border bg-card-color border-border-color text-card-text-color text-xs focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
         />
       </div>
     </form>
